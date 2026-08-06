@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hades House — Casa de Apuestas & Casino Virtual 🇩🇴</title>
-    <meta name="description" content="Plataforma profesional de apuestas deportivas y casino virtual. Cobertura en vivo de LIDOM, MLB, Champions League, NBA, LDF, gráficos estadísticos y Cash Out instantáneo.">
-    <meta name="keywords" content="apuestas deportivas, casa de apuestas, lidom, licey, aguilas, mlb, parlay, cash out, casino online">
+    <title>Hades House — Apuestas con Datos de APIs Deportivas en Vivo 🇩🇴</title>
+    <meta name="description" content="Plataforma profesional de apuestas deportivas conectada a APIs reales de ESPN y TheSportsDB. Marcadores en vivo de MLB, LIDOM, Champions League, NBA y Comentarios en directo.">
+    <meta name="keywords" content="apuestas deportivas reales, espn api, lidom en vivo, mlb marcador real, parlay, cash out, comentarios en vivo">
     <meta name="author" content="HadesVks">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Hades House — Casa de Apuestas Pro">
-    <meta property="og:description" content="Plataforma de apuestas deportivas en vivo con estadísticas, Match Tracker 2D, Cash Out y Casino.">
+    <meta property="og:title" content="Hades House — Conexión API Deportiva Real">
+    <meta property="og:description" content="Conexión en vivo con APIs públicas de ESPN para marcadores reales, estadísticas y chat de comentarios.">
     <meta property="og:type" content="website">
 
     <!-- Fonts Google (Outfit & Inter) -->
@@ -21,17 +21,17 @@
     <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- SweetAlert2 (Modales Pro) -->
+    <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    <!-- Chart.js (Gráficos Estadísticos) -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Supabase JS Client SDK -->
+    <!-- Supabase Client SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- Styles -->
@@ -39,16 +39,16 @@
 </head>
 <body class="dark-theme rd-style">
 
-    <!-- BANNER DECORATIVO TRICOLOR -->
+    <!-- BANNER TRICOLOR -->
     <div class="flag-bar"></div>
 
-    <!-- NAVBAR HEADER PRO -->
+    <!-- NAVBAR HEADER -->
     <header class="main-header" id="main-header">
         <div class="header-container">
             <div class="logo-brand" id="logo-brand">
                 <i class="fa-solid fa-trophy logo-icon"></i>
                 <span class="logo-text">HADES <span class="accent-text">HOUSE</span></span>
-                <span class="badge-demo">PRO EDITION</span>
+                <span class="badge-demo">REAL API LIVE</span>
             </div>
 
             <!-- Sports Nav Categories -->
@@ -60,19 +60,16 @@
                     <i class="fa-solid fa-baseball"></i> LIDOM (Pelota RD)
                 </button>
                 <button class="cat-btn" data-category="mlb" id="cat-btn-mlb">
-                    <i class="fa-solid fa-baseball-bat-ball"></i> MLB
+                    <i class="fa-solid fa-baseball-bat-ball"></i> MLB Real (ESPN)
                 </button>
                 <button class="cat-btn" data-category="football" id="cat-btn-football">
-                    <i class="fa-solid fa-futbol"></i> Fútbol / Champions
+                    <i class="fa-solid fa-futbol"></i> Fútbol Real (ESPN)
                 </button>
                 <button class="cat-btn" data-category="basketball" id="cat-btn-basketball">
-                    <i class="fa-solid fa-basketball"></i> NBA / LNB
+                    <i class="fa-solid fa-basketball"></i> NBA Real (ESPN)
                 </button>
                 <button class="cat-btn highlight-casino" data-category="banca" id="cat-btn-banca">
                     <i class="fa-solid fa-dice-five"></i> Sorteos & Palé
-                </button>
-                <button class="cat-btn highlight-gallos" data-category="gallos" id="cat-btn-gallos">
-                    <i class="fa-solid fa-feather-pointed"></i> Gallera Pro
                 </button>
             </nav>
 
@@ -92,7 +89,7 @@
                 <!-- USER LOGGED STATE -->
                 <div class="user-logged-block hidden" id="user-logged-block">
                     <div class="balance-display">
-                        <span class="balance-label">SALDO DISPONIBLE</span>
+                        <span class="balance-label">BILLETERA PRINCIPAL</span>
                         <span class="balance-amount" id="user-balance">RD$ 0.00</span>
                     </div>
                     <button class="btn-deposit" id="btn-open-deposit">
@@ -136,13 +133,13 @@
     <section class="hero-ticker-section">
         <div class="ticker-content">
             <div class="ticker-item">
-                <span class="ticker-pulse"></span> ⚾ <strong>LIDOM EN DIRECTO:</strong> Licey 4 - 3 Águilas (8vo Inning) — ¡Jonrón con hombres en base!
+                <span class="ticker-pulse"></span> 📡 <strong>API ESPN CONECTADA:</strong> Sincronización de marcadores reales en directo.
             </div>
             <div class="ticker-item">
-                ⚽ <strong>CHAMPIONS LEAGUE:</strong> Real Madrid vs Barcelona (2-1) Min 82' — Cuotas en movimiento constante.
+                💬 <strong>COMENTARIOS EN VIVO:</strong> Chat en tiempo real para usuarios conectados.
             </div>
             <div class="ticker-item">
-                ⚡ <strong>CASH OUT PRO:</strong> Vende tu ticket en vivo antes del silbato final y asegura tus ganancias.
+                ⚡ <strong>CASH OUT EN TIEMPO REAL:</strong> Vende tu ticket con liquidación automática.
             </div>
         </div>
     </section>
@@ -153,50 +150,39 @@
         <!-- SIDEBAR DEPORTE / FILTROS -->
         <aside class="sidebar-left" id="sidebar-left">
             <div class="sidebar-block">
-                <h3 class="sidebar-title"><i class="fa-solid fa-trophy"></i> Ligas Destacadas</h3>
+                <h3 class="sidebar-title"><i class="fa-solid fa-network-wired"></i> Conexión API Deportes</h3>
                 <ul class="league-list">
-                    <li><a href="#" class="league-link active" data-league="all"><i class="fa-solid fa-globe"></i> Todos los Deportes</a></li>
+                    <li><a href="#" class="league-link active" data-league="all"><i class="fa-solid fa-globe"></i> Todos los Eventos API</a></li>
                     <li><a href="#" class="league-link" data-league="lidom"><i class="fa-solid fa-baseball"></i> LIDOM (Béisbol RD)</a></li>
-                    <li><a href="#" class="league-link" data-league="mlb"><i class="fa-solid fa-baseball-bat-ball"></i> MLB (Grandes Ligas)</a></li>
-                    <li><a href="#" class="league-link" data-league="champions"><i class="fa-solid fa-star"></i> UEFA Champions League</a></li>
-                    <li><a href="#" class="league-link" data-league="nba"><i class="fa-solid fa-basketball"></i> NBA League</a></li>
-                    <li><a href="#" class="league-link" data-league="ufc"><i class="fa-solid fa-hand-fist"></i> UFC / MMA</a></li>
+                    <li><a href="#" class="league-link" data-league="mlb"><i class="fa-solid fa-baseball-bat-ball"></i> MLB Real (ESPN API)</a></li>
+                    <li><a href="#" class="league-link" data-league="football"><i class="fa-solid fa-futbol"></i> Fútbol Real (ESPN API)</a></li>
+                    <li><a href="#" class="league-link" data-league="basketball"><i class="fa-solid fa-basketball"></i> NBA Real (ESPN API)</a></li>
                 </ul>
             </div>
 
-            <!-- PROMO PARLAY BONUS -->
+            <!-- PROMO CARD -->
             <div class="sidebar-block promo-card-rd">
-                <i class="fa-solid fa-crown promo-icon"></i>
-                <h4>Bonus Combinado +25%</h4>
-                <p>Arma un Parlay de 3+ selecciones y multiplica tu retorno automático.</p>
-                <button class="btn-secondary-sm" id="btn-quick-parlay">Crear Parlay Pro</button>
-            </div>
-
-            <!-- PANEL DE CONTROL OPERADOR / SIMULACIÓN -->
-            <div class="sidebar-block operator-panel">
-                <h3 class="sidebar-title"><i class="fa-solid fa-sliders"></i> Simulación en Vivo</h3>
-                <p class="text-muted-sm">Avanza eventos en tiempo real:</p>
-                <button class="btn-action-sm" id="btn-simulate-minute">
-                    <i class="fa-solid fa-forward-step"></i> Avanzar Evento +1 Min
-                </button>
-                <button class="btn-action-sm danger" id="btn-finish-matches">
-                    <i class="fa-solid fa-flag-checkered"></i> Finalizar & Liquidar
+                <i class="fa-solid fa-satellite-dish promo-icon"></i>
+                <h4>Datos Directos de la Red</h4>
+                <p>Marcadores reales consultados de la API de ESPN y TheSportsDB.</p>
+                <button class="btn-secondary-sm" id="btn-sync-api">
+                    <i class="fa-solid fa-rotate"></i> Actualizar API Ahora
                 </button>
             </div>
         </aside>
 
-        <!-- MAIN CONTENT (MATCHES & TRACKER & CASINO) -->
+        <!-- MAIN CONTENT (MATCHES & LIVE CHAT / COMMENTS) -->
         <section class="main-content" id="main-content">
 
-            <!-- MATCH TRACKER 2D (VISUALIZADOR EN TIEMPO REAL) -->
+            <!-- MATCH TRACKER 2D -->
             <div class="match-tracker-container" id="match-tracker-container">
                 <div class="tracker-header">
-                    <span class="badge-live-tracker">🔴 MATCH TRACKER EN VIVO</span>
-                    <h3 id="tracker-title">Tigres del Licey vs Águilas Cibaeñas</h3>
+                    <span class="badge-live-tracker">🔴 COMENTARIOS & MONITOR EN DIRECTO</span>
+                    <h3 id="tracker-title">Evento Seleccionado</h3>
                 </div>
                 <div class="tracker-body">
                     <div class="pitch-2d" id="pitch-2d">
-                        <div class="pitch-event-text" id="pitch-event-text">⚾ ¡Batazo profundo al jardín central! Licey amenaza con hombres en 2da y 3ra.</div>
+                        <div class="pitch-event-text" id="pitch-event-text">📡 Conectado a la API deportiva de ESPN en tiempo real...</div>
                     </div>
                     <div class="tracker-stats-chart">
                         <canvas id="liveStatsChart" height="110"></canvas>
@@ -207,8 +193,8 @@
             <!-- SECTION HEADER -->
             <div class="section-header">
                 <div class="section-title-wrap">
-                    <h1 class="page-title" id="page-title">Mercados Deportivos & Cuotas en Vivo</h1>
-                    <span class="live-indicator"><i class="fa-solid fa-circle blink"></i> TRANSMISIÓN EN DIRECTO</span>
+                    <h1 class="page-title" id="page-title">Mercados de Apuestas en Vivo (API ESPN)</h1>
+                    <span class="live-indicator"><i class="fa-solid fa-circle blink"></i> DATOS REALES</span>
                 </div>
                 <div class="filter-tabs">
                     <button class="tab-btn active" data-filter="live" id="tab-filter-live">En Directo (<span id="count-live">0</span>)</button>
@@ -219,17 +205,34 @@
 
             <!-- MATCHES GRID CONTAINER -->
             <div class="matches-grid" id="matches-grid">
-                <!-- Se puebla dinámicamente desde JavaScript -->
+                <!-- Se puebla dinámicamente desde JavaScript / API -->
+            </div>
+
+            <!-- MÓDULO DE COMENTARIOS EN VIVO -->
+            <div class="live-comments-section" id="live-comments-section">
+                <div class="section-header">
+                    <h2 class="page-title"><i class="fa-solid fa-comments"></i> Comentarios en Vivo del Partido</h2>
+                </div>
+                <div class="comments-box-wrapper">
+                    <div class="comments-list" id="comments-list">
+                        <!-- Comentarios dinámicos en vivo -->
+                    </div>
+                    <div class="comments-input-bar">
+                        <input type="text" id="input-comment" placeholder="Escribe tu comentario sobre el partido en vivo..." maxlength="140">
+                        <button class="btn-primary" id="btn-send-comment">
+                            <i class="fa-solid fa-paper-plane"></i> Enviar
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- BANCA & SORTEOS SECTION -->
             <div class="casino-section hidden" id="casino-section">
                 <div class="section-header">
-                    <h2 class="page-title"><i class="fa-solid fa-dice"></i> Sorteos & Gallera Virtual</h2>
+                    <h2 class="page-title"><i class="fa-solid fa-dice"></i> Sorteos & Quinielas</h2>
                 </div>
 
                 <div class="casino-grid">
-                    <!-- GAME 1: QUINIELA Y PALÉ -->
                     <div class="casino-card" id="pale-card">
                         <div class="casino-card-header">
                             <h3><i class="fa-solid fa-ticket"></i> Sorteo de Quinielas & Palé RD</h3>
@@ -247,38 +250,8 @@
                                 <input type="number" id="pale-stake" value="100" min="10">
                             </div>
                             <button class="btn-primary full-width" id="btn-play-pale" style="margin-top:12px;">
-                                Confirmar Palé Ganador
+                                Confirmar Palé
                             </button>
-                        </div>
-                    </div>
-
-                    <!-- GAME 2: GALLERA VIRTUAL REAL EN CANVAS -->
-                    <div class="casino-card" id="gallos-card">
-                        <div class="casino-card-header">
-                            <h3><i class="fa-solid fa-feather-pointed"></i> La Gallera Virtual HD</h3>
-                            <span class="badge-live">EN VIVO EN EL REDONDEL</span>
-                        </div>
-                        <div class="gallos-ring">
-                            <div class="gallo-box indio">
-                                <h4>🐓 Gallo Indio</h4>
-                                <span class="gallo-odds">1.95</span>
-                            </div>
-                            <div class="vs-badge">VS</div>
-                            <div class="gallo-box giro">
-                                <h4>🐓 Gallo Giro</h4>
-                                <span class="gallo-odds">1.85</span>
-                            </div>
-                        </div>
-                        <div class="roulette-bet-options">
-                            <button class="btn-roulette red" data-choice="indio">APOSTAR AL INDIO (1.95)</button>
-                            <button class="btn-roulette black" data-choice="giro">APOSTAR AL GIRO (1.85)</button>
-                        </div>
-                        <div class="crash-controls">
-                            <div class="input-group">
-                                <label for="gallo-stake">Monto (RD$)</label>
-                                <input type="number" id="gallo-stake" value="200" min="50">
-                            </div>
-                            <button class="btn-primary" id="btn-spin-gallo">Soltar Gallos</button>
                         </div>
                     </div>
                 </div>
@@ -333,7 +306,7 @@
                         <button class="btn-qs" data-amount="100">RD$100</button>
                         <button class="btn-qs" data-amount="500">RD$500</button>
                         <button class="btn-qs" data-amount="1000">RD$1K</button>
-                        <button class="btn-qs" id="btn-qs-max">TODO EL SALDO</button>
+                        <button class="btn-qs" id="btn-qs-max">SALDO MÁXIMO</button>
                     </div>
 
                     <div class="summary-row payout-row">
@@ -358,7 +331,7 @@
 
     </main>
 
-    <!-- MODAL AUTENTICACIÓN: LOGIN & REGISTRO REAL -->
+    <!-- MODAL AUTENTICACIÓN -->
     <div class="modal-overlay hidden" id="modal-auth">
         <div class="modal-card modal-auth-card">
             <div class="modal-header">
@@ -439,13 +412,13 @@
         <div class="footer-container">
             <div class="footer-col">
                 <h4><i class="fa-solid fa-trophy"></i> HADES HOUSE RD 🇩🇴</h4>
-                <p>Plataforma profesional de entretenimiento deportivo y cuotas en tiempo real. Cobertura completa de la Liga Dominicana de Béisbol (LIDOM), MLB, LNB y fútbol profesional.</p>
+                <p>Plataforma profesional de entretenimiento deportivo conectada a APIs reales de ESPN y TheSportsDB. Cobertura de la Liga Dominicana de Béisbol (LIDOM), MLB, LNB y fútbol profesional.</p>
             </div>
             <div class="footer-col">
                 <h4>Accesos Rápidos</h4>
                 <ul>
-                    <li><a href="#matches-grid">Cartelera Deportiva</a></li>
-                    <li><a href="#casino-section">Sorteos Especiales</a></li>
+                    <li><a href="#matches-grid">Cartelera Deportiva API</a></li>
+                    <li><a href="#live-comments-section">Comentarios en Vivo</a></li>
                     <li><a href="#sidebar-right">Gestión de Boletos</a></li>
                 </ul>
             </div>

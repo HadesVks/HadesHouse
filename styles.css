@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HADES HOUSE PRO EDITION 🇩🇴 — HIGH PERFORMANCE SPORTSBOOK STYLES
+   HADES HOUSE REAL API EDITION 🇩🇴 — STYLES & LIVE COMMENTS MODULE
    ========================================================================== */
 
 :root {
@@ -126,28 +126,20 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
     border: 1px solid rgba(255, 215, 0, 0.4); color: var(--primary-gold);
 }
 
-.cat-btn.highlight-gallos {
-    background: linear-gradient(135deg, rgba(255, 61, 0, 0.3), rgba(255, 193, 7, 0.3));
-    border: 1px solid var(--primary-orange); color: #FFF;
-}
-
-/* Auth Guest Buttons */
+/* Auth & Wallet Header */
 .auth-buttons-guest { display: flex; align-items: center; gap: 10px; }
 
 .btn-secondary-header {
     background: rgba(255, 255, 255, 0.06);
     color: var(--text-primary); border: 1px solid var(--border-color);
-    padding: 8px 16px; border-radius: var(--radius-md);
-    font-weight: 700; font-size: 0.85rem;
+    padding: 8px 16px; border-radius: var(--radius-md); font-weight: 700; font-size: 0.85rem;
 }
 
 .btn-primary-header {
     background: linear-gradient(135deg, var(--rd-blue), #004080);
-    color: #fff; padding: 8px 16px; border-radius: var(--radius-md);
-    font-weight: 700; font-size: 0.85rem; border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff; padding: 8px 16px; border-radius: var(--radius-md); font-weight: 700; font-size: 0.85rem; border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* User Logged Widget & Profile Dropdown */
 .user-logged-block { display: flex; align-items: center; gap: 14px; }
 .balance-display { display: flex; flex-direction: column; align-items: flex-end; }
 .balance-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; }
@@ -192,8 +184,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 
 .btn-deposit {
     background: linear-gradient(135deg, var(--accent-emerald), #00C853);
-    color: #000; padding: 8px 14px; border-radius: var(--radius-md);
-    font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;
+    color: #000; padding: 8px 14px; border-radius: var(--radius-md); font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;
 }
 
 .btn-icon {
@@ -211,23 +202,14 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 
 /* Hero Ticker */
 .hero-ticker-section {
-    background: rgba(0, 45, 98, 0.15);
-    border-bottom: 1px solid rgba(0, 45, 98, 0.3);
+    background: rgba(0, 45, 98, 0.15); border-bottom: 1px solid rgba(0, 45, 98, 0.3);
     padding: 8px 24px; overflow: hidden;
 }
 
-.ticker-content {
-    display: flex; align-items: center; justify-content: space-around; gap: 30px;
-    font-size: 0.85rem; color: var(--text-secondary);
-}
+.ticker-content { display: flex; align-items: center; justify-content: space-around; gap: 30px; font-size: 0.85rem; color: var(--text-secondary); }
+.ticker-pulse { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent-emerald); box-shadow: 0 0 8px var(--accent-emerald); animation: blink 1.2s infinite; }
 
-.ticker-pulse {
-    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent-emerald); box-shadow: 0 0 8px var(--accent-emerald);
-    animation: blink 1.2s infinite;
-}
-
-/* App Layout */
+/* Layout */
 .app-layout {
     max-width: 1440px; margin: 20px auto; padding: 0 24px;
     display: grid; grid-template-columns: 240px 1fr 340px; gap: 20px; align-items: start;
@@ -239,26 +221,13 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
     border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-card);
 }
 
-.sidebar-title {
-    font-size: 0.95rem; font-weight: 800; color: var(--text-primary);
-    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
-}
-
+.sidebar-title { font-size: 0.95rem; font-weight: 800; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 .sidebar-title i { color: var(--primary-gold); }
 
 .league-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
-.league-link {
-    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
-    border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--text-secondary);
-}
-
-.league-link:hover, .league-link.active {
-    background: rgba(255, 255, 255, 0.05); color: var(--text-primary);
-}
-
-.league-link.active {
-    border-left: 3px solid var(--rd-red); color: var(--primary-gold);
-}
+.league-link { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--text-secondary); }
+.league-link:hover, .league-link.active { background: rgba(255, 255, 255, 0.05); color: var(--text-primary); }
+.league-link.active { border-left: 3px solid var(--rd-red); color: var(--primary-gold); }
 
 .promo-card-rd {
     background: linear-gradient(135deg, rgba(206, 17, 38, 0.2), rgba(0, 45, 98, 0.4));
@@ -268,35 +237,13 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 .promo-icon { font-size: 2rem; color: var(--primary-gold); margin-bottom: 8px; }
 .promo-card-rd h4 { font-size: 1rem; margin-bottom: 4px; color: var(--text-primary); }
 .promo-card-rd p { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px; }
+.btn-secondary-sm { background: var(--rd-red); color: #fff; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 700; width: 100%; }
 
-.btn-secondary-sm {
-    background: var(--rd-red); color: #fff; padding: 6px 12px; border-radius: var(--radius-sm);
-    font-size: 0.8rem; font-weight: 700; width: 100%;
-}
-
-.operator-panel { border-color: rgba(255, 193, 7, 0.3); }
-.text-muted-sm { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px; }
-
-.btn-action-sm {
-    background: rgba(0, 45, 98, 0.4); color: #38BDF8;
-    border: 1px solid rgba(56, 189, 248, 0.3); padding: 8px 12px; border-radius: var(--radius-sm);
-    font-size: 0.8rem; font-weight: 700; width: 100%; margin-bottom: 6px;
-}
-
-.btn-action-sm.danger {
-    background: rgba(206, 17, 38, 0.2); color: #FF6B6B; border-color: rgba(206, 17, 38, 0.4);
-}
-
-/* Match Tracker 2D Widget */
-.match-tracker-container {
-    background: var(--bg-card); border: 1px solid rgba(255, 215, 0, 0.3);
-    border-radius: var(--radius-xl); padding: 16px; margin-bottom: 20px; box-shadow: var(--shadow-card);
-}
-
+/* Match Tracker */
+.match-tracker-container { background: var(--bg-card); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: var(--radius-xl); padding: 16px; margin-bottom: 20px; box-shadow: var(--shadow-card); }
 .tracker-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .badge-live-tracker { background: rgba(206, 17, 38, 0.3); color: #FF6B6B; font-weight: 800; font-size: 0.7rem; padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(206,17,38,0.5); }
 .tracker-header h3 { font-size: 1.1rem; color: var(--text-primary); }
-
 .tracker-body { display: grid; grid-template-columns: 1fr 280px; gap: 16px; align-items: center; }
 
 .pitch-2d {
@@ -305,12 +252,20 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
     position: relative; display: flex; align-items: center; justify-content: center; padding: 12px;
 }
 
-.pitch-event-text {
-    font-size: 0.9rem; font-weight: 800; color: #FFF; text-align: center;
-    background: rgba(0,0,0,0.6); padding: 8px 14px; border-radius: 20px; border: 1px solid var(--accent-emerald);
-}
-
+.pitch-event-text { font-size: 0.9rem; font-weight: 800; color: #FFF; text-align: center; background: rgba(0,0,0,0.6); padding: 8px 14px; border-radius: 20px; border: 1px solid var(--accent-emerald); }
 .tracker-stats-chart { background: rgba(0,0,0,0.3); border-radius: var(--radius-md); padding: 8px; }
+
+/* Live Comments Module */
+.live-comments-section { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 20px; margin-top: 20px; }
+.comments-box-wrapper { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+.comments-list { max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+
+.comment-bubble { background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 0.85rem; }
+.comment-author { font-weight: 800; color: var(--primary-gold); margin-right: 6px; }
+.comment-time { font-size: 0.7rem; color: var(--text-muted); float: right; }
+
+.comments-input-bar { display: flex; gap: 10px; }
+.comments-input-bar input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: #fff; padding: 10px 14px; border-radius: var(--radius-md); font-size: 0.9rem; }
 
 /* Main Content & Section */
 .main-content { display: flex; flex-direction: column; gap: 20px; }
@@ -318,28 +273,14 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 .section-title-wrap { display: flex; align-items: center; gap: 12px; }
 .page-title { font-size: 1.4rem; font-weight: 900; }
 
-.live-indicator {
-    background: rgba(0, 230, 118, 0.15); color: var(--accent-emerald);
-    border: 1px solid rgba(0, 230, 118, 0.3); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800;
-}
-
-.filter-tabs {
-    display: flex; background: var(--bg-card); padding: 4px; border-radius: var(--radius-md); border: 1px solid var(--border-color);
-}
-
-.tab-btn {
-    background: transparent; color: var(--text-secondary); padding: 6px 14px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 700;
-}
-
+.live-indicator { background: rgba(0, 230, 118, 0.15); color: var(--accent-emerald); border: 1px solid rgba(0, 230, 118, 0.3); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; }
+.filter-tabs { display: flex; background: var(--bg-card); padding: 4px; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+.tab-btn { background: transparent; color: var(--text-secondary); padding: 6px 14px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 700; }
 .tab-btn.active { background: var(--rd-blue); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
 
 /* Matches Grid */
 .matches-grid { display: flex; flex-direction: column; gap: 14px; }
-.match-card {
-    background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg);
-    padding: 16px 20px; transition: var(--transition-smooth); position: relative; overflow: hidden;
-}
-
+.match-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 16px 20px; transition: var(--transition-smooth); position: relative; overflow: hidden; }
 .match-card:hover { border-color: rgba(255, 215, 0, 0.3); box-shadow: var(--shadow-card); }
 .match-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; font-size: 0.8rem; color: var(--text-muted); }
 .match-league { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--primary-gold); }
@@ -352,11 +293,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 .team-score { font-size: 1.2rem; font-weight: 900; color: var(--primary-gold); }
 
 .odds-group { display: flex; gap: 8px; }
-.odds-btn {
-    background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); border-radius: var(--radius-md);
-    padding: 8px 16px; min-width: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-}
-
+.odds-btn { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 8px 16px; min-width: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .odds-btn:hover { background: rgba(0, 45, 98, 0.4); border-color: var(--rd-blue); }
 .odds-btn.selected { background: var(--rd-blue); border-color: var(--primary-gold); color: #fff; box-shadow: 0 0 12px rgba(0, 45, 98, 0.6); }
 
@@ -376,22 +313,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 .pale-inputs input { width: 70px; height: 60px; font-size: 1.8rem; font-weight: 900; text-align: center; background: rgba(255,255,255,0.08); border: 2px solid var(--primary-gold); color: #fff; border-radius: var(--radius-md); }
 .plus-sign { font-size: 1.5rem; font-weight: 900; color: var(--primary-gold); }
 
-.gallos-ring { display: flex; align-items: center; justify-content: space-around; background: #080B12; border: 2px solid var(--primary-gold); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 16px; text-align: center; }
-.gallo-box { padding: 10px 16px; border-radius: var(--radius-md); }
-.gallo-box.indio { background: rgba(206, 17, 38, 0.2); border: 1px solid var(--rd-red); }
-.gallo-box.giro { background: rgba(255, 193, 7, 0.2); border: 1px solid var(--primary-gold); }
-.vs-badge { font-size: 1.2rem; font-weight: 900; color: var(--accent-cyan); }
-.gallo-odds { font-size: 1.2rem; font-weight: 900; color: var(--accent-emerald); display: block; margin-top: 4px; }
-
-.crash-controls { display: flex; gap: 10px; align-items: flex-end; }
-.input-group { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-.input-group label { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
-.input-group input { background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border-color); color: #fff; padding: 8px 12px; border-radius: var(--radius-md); font-size: 1rem; font-weight: 800; }
-
 .btn-primary { background: linear-gradient(135deg, var(--rd-blue), #004080); color: #fff; font-weight: 800; padding: 10px 20px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.2); }
-.btn-roulette { flex: 1; padding: 10px; border-radius: var(--radius-md); font-weight: 800; font-size: 0.85rem; }
-.btn-roulette.red { background: var(--rd-red); color: #fff; }
-.btn-roulette.black { background: var(--rd-blue); color: #fff; }
 
 /* Sidebar Right */
 .sidebar-right { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); box-shadow: var(--shadow-card); position: sticky; top: 90px; overflow: hidden; }
