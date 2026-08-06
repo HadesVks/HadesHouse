@@ -21,6 +21,7 @@
                     <span class="logo-text">HADES <span class="accent-text">HOUSE</span></span>
                     <span class="logo-subtext">BILLETERA OFICIAL</span>
                 </div>
+                <span class="badge-official">OFICIAL RD 🇩🇴</span>
             </a>
             <nav class="nav-categories">
                 <a href="index.html" class="cat-btn"><i class="fa-solid fa-house"></i> Inicio / Deportes</a>
@@ -28,10 +29,23 @@
                 <a href="casino.html" class="cat-btn highlight-casino"><i class="fa-solid fa-dice"></i> Casino Virtual</a>
                 <a href="billetera.html" class="cat-btn active"><i class="fa-solid fa-wallet"></i> Billetera Real</a>
             </nav>
+            <div class="wallet-widget">
+                <div class="auth-buttons-guest" id="guest-auth-block">
+                    <button class="btn-secondary-header" id="btn-open-login"><i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión</button>
+                    <button class="btn-primary-header" id="btn-open-register"><i class="fa-solid fa-user-plus"></i> Abrir Cuenta</button>
+                </div>
+                <div class="user-logged-block hidden" id="user-logged-block">
+                    <div class="balance-display">
+                        <span class="balance-label">BILLETERA OFICIAL</span>
+                        <span class="balance-amount" id="user-balance">RD$ 0.00</span>
+                    </div>
+                    <button class="btn-deposit" id="btn-open-deposit"><i class="fa-solid fa-wallet"></i> Depósitos / Retiros</button>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main class="app-layout" style="grid-template-columns: 1fr; max-width: 700px;">
+    <main class="app-layout" style="grid-template-columns: 1fr; max-width: 600px;">
         <section class="main-content">
             <div class="section-header">
                 <h1 class="page-title"><i class="fa-solid fa-building-columns"></i> Centro de Pagos & Billetera Real</h1>
@@ -72,27 +86,12 @@
                             <label>Número de Tarjeta</label>
                             <input type="text" id="dep-card-number" placeholder="4532 •••• •••• 8892" maxlength="19" required>
                         </div>
-                        <div class="form-row-2">
-                            <div class="form-group">
-                                <label>Vencimiento</label>
-                                <input type="text" placeholder="MM/AA" maxlength="5" required>
-                            </div>
-                            <div class="form-group">
-                                <label>CVV</label>
-                                <input type="password" placeholder="123" maxlength="4" required>
-                            </div>
-                        </div>
                         <button type="submit" class="btn-primary full-width margin-top-12">
                             <i class="fa-solid fa-lock"></i> Procesar Depósito Seguro
                         </button>
                     </form>
 
                     <form id="form-deposit-bank" class="payment-subform hidden">
-                        <div class="bank-details-box">
-                            <p><strong>Cuentas Bancarias Autorizadas:</strong></p>
-                            <small>• <strong>Banco Popular:</strong> 792019284 (Hades House SRL)</small><br>
-                            <small>• <strong>Banreservas:</strong> 960192837 (Hades House SRL)</small>
-                        </div>
                         <div class="form-group">
                             <label>Monto Transferido (RD$)</label>
                             <input type="number" id="dep-bank-amount" value="2000" min="500" required>
@@ -102,24 +101,17 @@
                             <input type="text" id="dep-bank-ref" placeholder="Ej: REF-99201827" required>
                         </div>
                         <button type="submit" class="btn-primary full-width margin-top-12">
-                            <i class="fa-solid fa-file-invoice-dollar"></i> Validar Transferencia Bancaria
+                            <i class="fa-solid fa-file-invoice-dollar"></i> Validar Transferencia
                         </button>
                     </form>
 
                     <form id="form-deposit-crypto" class="payment-subform hidden">
-                        <div class="crypto-qr-box">
-                            <div class="qr-placeholder">
-                                <i class="fa-solid fa-qrcode qr-icon"></i>
-                            </div>
-                            <p class="crypto-addr-label">Enviar USDT (Red TRC-20):</p>
-                            <code class="crypto-address" id="crypto-address-text">TXh8Jk29LpQzM902WxE91KsA88Z7k</code>
-                        </div>
                         <div class="form-group">
-                            <label>Hash de Transacción / TXID</label>
-                            <input type="text" id="dep-crypto-txid" placeholder="Paste TXID Hash..." required>
+                            <label>Hash TXID</label>
+                            <input type="text" id="dep-crypto-txid" placeholder="Paste Hash TXID..." required>
                         </div>
                         <button type="submit" class="btn-primary full-width margin-top-12">
-                            <i class="fa-solid fa-bolt"></i> Verificar Transacción Cripto
+                            <i class="fa-solid fa-bolt"></i> Verificar Cripto
                         </button>
                     </form>
                 </div>
@@ -131,32 +123,60 @@
                             <input type="number" id="with-amount" value="1000" min="500" required>
                         </div>
                         <div class="form-group">
-                            <label>Método de Retiro</label>
-                            <select id="with-method-select" class="form-select">
-                                <option value="bank_popular">Banco Popular Dominicano</option>
-                                <option value="bank_banreservas">Banreservas</option>
-                                <option value="bank_bhd">Banco BHD</option>
-                                <option value="usdt_trc20">USDT Cripto (TRC-20)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Número de Cuenta o Billetera</label>
-                            <input type="text" id="with-account-number" placeholder="Ej: 801928374 o TXh8..." required>
-                        </div>
-                        <div class="form-group">
-                            <label>Nombre Completo del Titular</label>
-                            <input type="text" id="with-holder-name" placeholder="Nombre del titular" required>
+                            <label>Número de Cuenta</label>
+                            <input type="text" id="with-account-number" placeholder="Ej: 801928374" required>
                         </div>
                         <button type="submit" class="btn-primary full-width margin-top-12">
-                            <i class="fa-solid fa-hand-holding-dollar"></i> Solicitar Retiro de Ganancias
+                            <i class="fa-solid fa-hand-holding-dollar"></i> Solicitar Retiro
                         </button>
                     </form>
                 </div>
             </div>
-
         </section>
     </main>
 
-    <script src="app.js"></script>
+    <!-- MODAL AUTH -->
+    <div class="modal-overlay hidden" id="modal-auth">
+        <div class="modal-card modal-auth-card">
+            <div class="modal-header">
+                <h3 id="auth-modal-title"><i class="fa-solid fa-user-shield"></i> Iniciar Sesión</h3>
+                <button class="btn-close-modal" id="btn-close-auth">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-tabs-switcher">
+                    <button class="auth-tab-btn active" id="tab-auth-login">Iniciar Sesión</button>
+                    <button class="auth-tab-btn" id="tab-auth-register">Crear Cuenta</button>
+                </div>
+                <form id="form-login" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">Correo Electrónico</label>
+                        <input type="email" id="login-email" placeholder="usuario@correo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Iniciar Sesión</button>
+                </form>
+                <form id="form-register" class="auth-form hidden">
+                    <div class="form-group">
+                        <label for="reg-name">Nombre Completo</label>
+                        <input type="text" id="reg-name" placeholder="Juan Pérez" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email">Correo Electrónico</label>
+                        <input type="email" id="reg-email" placeholder="usuario@correo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Contraseña</label>
+                        <input type="password" id="reg-password" minlength="6" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Registrar Cuenta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js" defer></script>
 </body>
 </html>

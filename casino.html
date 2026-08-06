@@ -21,6 +21,7 @@
                     <span class="logo-text">HADES <span class="accent-text">HOUSE</span></span>
                     <span class="logo-subtext">CASINO VIRTUAL HD</span>
                 </div>
+                <span class="badge-official">OFICIAL RD 🇩🇴</span>
             </a>
             <nav class="nav-categories">
                 <a href="index.html" class="cat-btn"><i class="fa-solid fa-house"></i> Inicio / Deportes</a>
@@ -28,6 +29,19 @@
                 <a href="casino.html" class="cat-btn active highlight-casino"><i class="fa-solid fa-dice"></i> Casino Virtual</a>
                 <a href="billetera.html" class="cat-btn"><i class="fa-solid fa-wallet"></i> Billetera Real</a>
             </nav>
+            <div class="wallet-widget">
+                <div class="auth-buttons-guest" id="guest-auth-block">
+                    <button class="btn-secondary-header" id="btn-open-login"><i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión</button>
+                    <button class="btn-primary-header" id="btn-open-register"><i class="fa-solid fa-user-plus"></i> Abrir Cuenta</button>
+                </div>
+                <div class="user-logged-block hidden" id="user-logged-block">
+                    <div class="balance-display">
+                        <span class="balance-label">BILLETERA OFICIAL</span>
+                        <span class="balance-amount" id="user-balance">RD$ 0.00</span>
+                    </div>
+                    <button class="btn-deposit" id="btn-open-deposit"><i class="fa-solid fa-wallet"></i> Depósitos / Retiros</button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -41,32 +55,74 @@
                     <h3><i class="fa-solid fa-feather-pointed"></i> La Gallera Virtual HD</h3>
                     <span class="badge-live">EN VIVO</span>
                 </div>
-                <div class="gallos-ring">
-                    <div class="gallo-box indio">
+                <div class="gallos-ring" style="display:flex; justify-content:space-around; align-items:center; margin: 20px 0; background:rgba(0,0,0,0.3); padding:20px; border-radius:16px;">
+                    <div class="gallo-box indio" style="text-align:center;">
                         <h4>🐓 Gallo Indio</h4>
-                        <span class="gallo-odds">1.95</span>
+                        <span class="gallo-odds" style="font-size:1.4rem; font-weight:900; color:var(--primary-gold);">1.95</span>
                     </div>
-                    <div class="vs-badge">VS</div>
-                    <div class="gallo-box giro">
+                    <div class="vs-badge" style="font-weight:900; font-size:1.5rem; color:var(--rd-red);">VS</div>
+                    <div class="gallo-box giro" style="text-align:center;">
                         <h4>🐓 Gallo Giro</h4>
-                        <span class="gallo-odds">1.85</span>
+                        <span class="gallo-odds" style="font-size:1.4rem; font-weight:900; color:var(--primary-gold);">1.85</span>
                     </div>
                 </div>
-                <div class="roulette-bet-options">
-                    <button class="btn-roulette red" data-choice="indio">APOSTAR AL INDIO (1.95)</button>
-                    <button class="btn-roulette black" data-choice="giro">APOSTAR AL GIRO (1.85)</button>
+                <div class="roulette-bet-options" style="display:flex; gap:12px;">
+                    <button class="btn-roulette red" data-choice="indio" style="flex:1; padding:12px; font-weight:800; background:var(--rd-red); color:#fff; border-radius:8px;">APOSTAR AL INDIO (1.95)</button>
+                    <button class="btn-roulette black" data-choice="giro" style="flex:1; padding:12px; font-weight:800; background:var(--rd-blue); color:#fff; border-radius:8px;">APOSTAR AL GIRO (1.85)</button>
                 </div>
-                <div class="crash-controls" style="margin-top: 16px;">
-                    <div class="input-group">
+                <div class="crash-controls" style="margin-top: 20px; max-width:400px; margin-left:auto; margin-right:auto;">
+                    <div class="form-group">
                         <label for="gallo-stake">Monto de Apuesta (RD$)</label>
                         <input type="number" id="gallo-stake" value="200" min="50">
                     </div>
-                    <button class="btn-primary" id="btn-spin-gallo">Soltar los Gallos</button>
+                    <button class="btn-primary full-width margin-top-12" id="btn-spin-gallo">Soltar los Gallos</button>
                 </div>
             </div>
         </section>
     </main>
 
-    <script src="app.js"></script>
+    <!-- MODAL AUTH -->
+    <div class="modal-overlay hidden" id="modal-auth">
+        <div class="modal-card modal-auth-card">
+            <div class="modal-header">
+                <h3 id="auth-modal-title"><i class="fa-solid fa-user-shield"></i> Iniciar Sesión</h3>
+                <button class="btn-close-modal" id="btn-close-auth">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-tabs-switcher">
+                    <button class="auth-tab-btn active" id="tab-auth-login">Iniciar Sesión</button>
+                    <button class="auth-tab-btn" id="tab-auth-register">Crear Cuenta</button>
+                </div>
+                <form id="form-login" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">Correo Electrónico</label>
+                        <input type="email" id="login-email" placeholder="usuario@correo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Iniciar Sesión</button>
+                </form>
+                <form id="form-register" class="auth-form hidden">
+                    <div class="form-group">
+                        <label for="reg-name">Nombre Completo</label>
+                        <input type="text" id="reg-name" placeholder="Juan Pérez" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email">Correo Electrónico</label>
+                        <input type="email" id="reg-email" placeholder="usuario@correo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Contraseña</label>
+                        <input type="password" id="reg-password" minlength="6" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Registrar Cuenta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js" defer></script>
 </body>
 </html>
