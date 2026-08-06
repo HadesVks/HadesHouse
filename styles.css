@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HADES HOUSE PAYMENT PRO EDITION 🇩🇴 — REAL PAYMENT GATEWAY STYLES
+   HADES HOUSE OFFICIAL BRAND EDITION 🇩🇴 — LUXURY IGAMING STYLES
    ========================================================================== */
 
 :root {
@@ -58,20 +58,44 @@ h1, h2, h3, h4, h5, h6, .logo-text, .balance-amount, .odds-btn { font-family: va
 a { color: inherit; text-decoration: none; }
 button { cursor: pointer; border: none; outline: none; font-family: inherit; transition: var(--transition-fast); }
 
-/* Header */
+/* Header & Official Logo */
 .main-header { position: sticky; top: 0; z-index: 100; background: rgba(8, 12, 20, 0.94); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-color); }
 .header-container { max-width: 1440px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.logo-brand { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; font-weight: 900; }
-.logo-icon { color: var(--primary-gold); font-size: 1.8rem; animation: flamePulse 2s infinite ease-in-out; }
+
+.logo-brand { display: flex; align-items: center; gap: 12px; }
+.brand-logo-img { width: 44px; height: 44px; border-radius: 10px; border: 1.5px solid var(--primary-gold); box-shadow: 0 0 12px rgba(255, 215, 0, 0.3); object-fit: cover; }
+.logo-text-group { display: flex; flex-direction: column; }
+.logo-text { font-size: 1.3rem; font-weight: 900; line-height: 1; }
+.logo-subtext { font-size: 0.6rem; color: var(--text-muted); font-weight: 800; letter-spacing: 1px; }
 .accent-text { color: var(--primary-gold); }
 
-.badge-demo { background: rgba(0, 45, 98, 0.4); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.4); font-size: 0.65rem; padding: 2px 8px; border-radius: 20px; font-weight: 800; }
+.badge-official { background: linear-gradient(135deg, var(--rd-blue), #004080); color: #FFF; border: 1px solid rgba(255, 215, 0, 0.4); font-size: 0.65rem; padding: 3px 10px; border-radius: 20px; font-weight: 900; }
 
 .nav-categories { display: flex; align-items: center; gap: 6px; overflow-x: auto; padding: 4px; }
 .cat-btn { background: transparent; color: var(--text-secondary); padding: 8px 14px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .cat-btn:hover, .cat-btn.active { background: rgba(255, 255, 255, 0.06); color: var(--text-primary); }
 .cat-btn.active { border-bottom: 2px solid var(--primary-gold); color: var(--primary-gold); }
 .cat-btn.highlight-casino { background: linear-gradient(135deg, rgba(0, 45, 98, 0.4), rgba(206, 17, 38, 0.4)); border: 1px solid rgba(255, 215, 0, 0.4); color: var(--primary-gold); }
+
+/* Promo Hero Banner */
+.promo-banner-hero {
+    background: linear-gradient(135deg, rgba(0, 45, 98, 0.6), rgba(206, 17, 38, 0.4)), url('logo.jpg') center/cover;
+    background-blend-mode: overlay;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    padding: 24px 40px; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+
+.promo-banner-content h2 { font-size: 1.5rem; color: #FFF; margin: 6px 0; }
+.promo-banner-content p { font-size: 0.9rem; color: var(--text-secondary); }
+.promo-badge-tag { background: var(--rd-red); color: #FFF; font-weight: 900; font-size: 0.7rem; padding: 2px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; }
+
+.btn-hero-claim {
+    background: linear-gradient(135deg, var(--primary-gold), #FF8F00); color: #000;
+    font-weight: 900; padding: 12px 24px; border-radius: var(--radius-md); font-size: 1rem;
+    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4); white-space: nowrap;
+}
+
+.btn-hero-claim:hover { transform: scale(1.03); }
 
 /* Wallet Header */
 .auth-buttons-guest { display: flex; align-items: center; gap: 10px; }
@@ -241,31 +265,16 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 
 .btn-cashout { background: linear-gradient(135deg, var(--primary-gold), #FF8F00); color: #000; font-weight: 900; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.8rem; width: 100%; margin-top: 8px; }
 
-/* Modals & Payment Styling */
+/* Modals & Footer Seals */
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: center; justify-content: center; }
 .modal-card { background: var(--bg-card); border: 1px solid var(--border-glow); border-radius: var(--radius-xl); width: 90%; max-width: 420px; padding: 24px; }
 .modal-payment-card { max-width: 480px; border-color: rgba(0, 230, 118, 0.3); }
 
-.payment-tabs-switcher { display: flex; background: rgba(255,255,255,0.05); padding: 4px; border-radius: var(--radius-md); margin-bottom: 16px; }
-.payment-tab-btn { flex: 1; background: transparent; color: var(--text-secondary); padding: 8px; font-weight: 800; font-size: 0.85rem; border-radius: var(--radius-sm); }
-.payment-tab-btn.active { background: var(--rd-blue); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+.footer-brand-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.footer-logo-img { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--primary-gold); }
+.footer-seals { display: flex; gap: 8px; margin-top: 6px; }
+.seal-badge { background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--primary-gold); padding: 4px 10px; border-radius: 6px; font-weight: 900; font-size: 0.75rem; }
 
-.methods-grid { display: flex; gap: 8px; margin-top: 6px; margin-bottom: 16px; }
-.method-btn { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 8px; border-radius: var(--radius-md); font-size: 0.75rem; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.method-btn.active { background: var(--rd-blue); border-color: var(--primary-gold); color: #fff; }
-
-.payment-subform { display: flex; flex-direction: column; gap: 12px; }
-.form-row-2 { display: flex; gap: 10px; }
-.form-select { background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border-color); color: #fff; padding: 10px 14px; border-radius: var(--radius-md); font-size: 0.9rem; }
-
-.bank-details-box { background: rgba(0, 45, 98, 0.2); border: 1px solid rgba(0, 45, 98, 0.5); padding: 12px; border-radius: var(--radius-md); font-size: 0.8rem; line-height: 1.6; margin-bottom: 8px; }
-.crypto-qr-box { background: rgba(255, 215, 0, 0.08); border: 1px dashed var(--primary-gold); border-radius: var(--radius-md); padding: 16px; text-align: center; margin-bottom: 12px; }
-.qr-icon { font-size: 3rem; color: var(--primary-gold); margin-bottom: 6px; }
-.crypto-address { font-size: 0.85rem; font-weight: 900; color: var(--accent-emerald); background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 4px; display: inline-block; word-break: break-all; }
-
-.margin-top-12 { margin-top: 12px; }
-
-/* Footer */
 .main-footer { margin-top: 60px; background: #06080D; border-top: 1px solid var(--border-color); padding: 40px 24px 20px; }
 .footer-container { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
 .footer-col h4 { margin-bottom: 12px; color: var(--primary-gold); }
@@ -283,4 +292,5 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
     .sidebar-left { display: none; }
     .sidebar-right { position: static; }
     .tracker-body { grid-template-columns: 1fr; }
+    .promo-banner-hero { flex-direction: column; align-items: flex-start; }
 }

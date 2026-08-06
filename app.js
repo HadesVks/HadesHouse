@@ -1,6 +1,6 @@
 /**
- * HADES HOUSE PAYMENT PRO EDITION 🇩🇴 — HIGH PERFORMANCE SPORTSBOOK ENGINE
- * Módulo de Pasarelas de Pago Reales: Tarjeta RD$, Banco Popular/Banreservas, USDT TRC-20 & Retiros
+ * HADES HOUSE OFFICIAL BRAND EDITION 🇩🇴 — HIGH PERFORMANCE SPORTSBOOK ENGINE
+ * Marca Oficial, Logo de Producción, Promociones y Pasarelas de Pago
  */
 
 // SUPABASE INITIALIZATION
@@ -47,8 +47,8 @@ const STATE = {
     myBets: [],
     activeFilter: 'live',
     activeCategory: 'all',
-    activePayTab: 'deposit', // 'deposit' | 'withdraw'
-    activePayMethod: 'card', // 'card' | 'bank' | 'crypto'
+    activePayTab: 'deposit',
+    activePayMethod: 'card',
     liveChart: null,
     liveComments: [
         { author: 'Carlos Dominicano 🇩🇴', text: '¡Licey va a ganar este partido sí o sí!', time: '21:05 PM' },
@@ -137,9 +137,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // REAL API FETCH: THESPORTSDB
 async function fetchRealSportsDataFromTheSportsDB() {
     const teamsToFetch = [
-        { name: 'Real_Madrid', category: 'football', leagueName: 'LaLiga Española (TheSportsDB)' },
-        { name: 'New_York_Yankees', category: 'mlb', leagueName: 'Grandes Ligas MLB (API Real)' },
-        { name: 'Los_Angeles_Lakers', category: 'basketball', leagueName: 'NBA League (API Real)' }
+        { name: 'Real_Madrid', category: 'football', leagueName: 'LaLiga Española (Oficial)' },
+        { name: 'New_York_Yankees', category: 'mlb', leagueName: 'Grandes Ligas MLB (Oficial)' },
+        { name: 'Los_Angeles_Lakers', category: 'basketball', leagueName: 'NBA League (Oficial)' }
     ];
 
     for (const item of teamsToFetch) {
@@ -233,7 +233,7 @@ function initLiveStatsChart() {
         data: {
             labels: ['Equipo Local', 'Equipo Visita'],
             datasets: [{
-                label: 'Estadísticas API Real',
+                label: 'Estadísticas Oficiales',
                 data: [65, 52],
                 backgroundColor: ['#002D62', '#FFD700'],
                 borderRadius: 6
@@ -310,15 +310,32 @@ function initEventListeners() {
         if (e.key === 'Enter') sendComment();
     });
 
-    // Modales de Pago & Billetera
-    document.getElementById('btn-open-deposit')?.addEventListener('click', () => {
+    // Reclamar Bono de Bienvenida
+    document.getElementById('btn-claim-welcome-bonus')?.addEventListener('click', () => {
         if (!STATE.currentUser) {
-            openAuthModal('login');
+            openAuthModal('register');
             return;
         }
-        document.getElementById('modal-deposit').classList.remove('hidden');
+
+        const bonus = 10000.00;
+        STATE.currentUser.balance += bonus;
+        STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
+
+        saveDatabase();
+        updateUI();
+
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
+
+        Swal.fire({
+            icon: 'success',
+            title: '¡Bono de Bienvenida Activado!',
+            text: 'Se han acreditado RD$ 10,000.00 promocionales a su billetera oficial con el código HADES100.',
+            confirmButtonColor: '#FFD700'
+        });
     });
-    document.getElementById('btn-quick-deposit-trigger')?.addEventListener('click', () => {
+
+    // Modales de Pago & Billetera
+    document.getElementById('btn-open-deposit')?.addEventListener('click', () => {
         if (!STATE.currentUser) {
             openAuthModal('login');
             return;
@@ -330,11 +347,11 @@ function initEventListeners() {
         document.getElementById('modal-deposit').classList.add('hidden');
     });
 
-    // Switcher de Pestañas Depósito / Retiro
+    // Switcher Depósito / Retiro
     document.getElementById('tab-pay-deposit')?.addEventListener('click', () => switchPaymentTab('deposit'));
     document.getElementById('tab-pay-withdraw')?.addEventListener('click', () => switchPaymentTab('withdraw'));
 
-    // Selector de Métodos de Pago
+    // Selector Métodos de Pago
     document.querySelectorAll('.method-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
@@ -348,7 +365,7 @@ function initEventListeners() {
         });
     });
 
-    // Form Submissions Pasarelas de Pago
+    // Form Submissions
     document.getElementById('form-deposit-card')?.addEventListener('submit', handleDepositCardSubmit);
     document.getElementById('form-deposit-bank')?.addEventListener('submit', handleDepositBankSubmit);
     document.getElementById('form-deposit-crypto')?.addEventListener('submit', handleDepositCryptoSubmit);
@@ -427,7 +444,6 @@ function switchPaymentTab(tab) {
     document.getElementById('section-pay-withdraw').classList.toggle('hidden', isDeposit);
 }
 
-// PASARELA 1: TARJETA CRÉDITO/DÉBITO
 function handleDepositCardSubmit(e) {
     e.preventDefault();
     if (!STATE.currentUser) return;
@@ -462,7 +478,6 @@ function handleDepositCardSubmit(e) {
     });
 }
 
-// PASARELA 2: TRANSFERENCIA BANCARIA RD
 function handleDepositBankSubmit(e) {
     e.preventDefault();
     if (!STATE.currentUser) return;
@@ -490,7 +505,6 @@ function handleDepositBankSubmit(e) {
     });
 }
 
-// PASARELA 3: CRIPTO USDT TRC-20
 function handleDepositCryptoSubmit(e) {
     e.preventDefault();
     if (!STATE.currentUser) return;
@@ -501,7 +515,7 @@ function handleDepositCryptoSubmit(e) {
         return;
     }
 
-    const creditedRD = 100 * 60.0; // 100 USDT = ~RD$ 6,000
+    const creditedRD = 100 * 60.0;
 
     STATE.currentUser.balance += creditedRD;
     STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
@@ -520,7 +534,6 @@ function handleDepositCryptoSubmit(e) {
     });
 }
 
-// SOLICITUD DE RETIRO DE GANANCIAS
 function handleWithdrawSubmit(e) {
     e.preventDefault();
     if (!STATE.currentUser) return;
