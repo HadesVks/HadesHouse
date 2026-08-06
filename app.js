@@ -1,6 +1,6 @@
 /**
  * HADES HOUSE OFFICIAL BRAND EDITION 🇩🇴 — HIGH PERFORMANCE SPORTSBOOK ENGINE
- * Manejo de Subpáginas, Event Listeners Globales y Resiliencia Total
+ * Verificación y Auditoría 100% Total de Botones e Interacciones
  */
 
 // SUPABASE INITIALIZATION
@@ -288,29 +288,79 @@ function sendComment() {
     renderComments();
 }
 
-// DELEGACIÓN DE EVENT LISTENERS GLOBALES (GARANTIZA QUE TODOS LOS BOTONES FUNCIONEN 100%)
+// EVENT LISTENERS GLOBALES (AUDITORÍA Y FUNCIONALIDAD COMPLETA EN CADA BOTÓN)
 function initEventListeners() {
     document.addEventListener('click', (e) => {
-        const target = e.target.closest('button, a, input');
+        const target = e.target.closest('button, a, input, .cat-btn, .league-link, .tab-btn, .btn-roulette');
         if (!target) return;
 
-        // Auth Modals
+        // Categorías y Ligas Nav
+        if (target.classList.contains('cat-btn')) {
+            const category = target.dataset.category;
+            if (category) {
+                document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+                target.classList.add('active');
+                STATE.activeCategory = category;
+                if (category === 'banca') {
+                    document.getElementById('matches-grid')?.classList.add('hidden');
+                    document.getElementById('casino-section')?.classList.remove('hidden');
+                } else {
+                    document.getElementById('casino-section')?.classList.add('hidden');
+                    document.getElementById('matches-grid')?.classList.remove('hidden');
+                    renderMatches();
+                }
+            }
+        }
+
+        if (target.classList.contains('league-link')) {
+            const league = target.dataset.league;
+            if (league) {
+                document.querySelectorAll('.league-link').forEach(l => l.classList.remove('active'));
+                target.classList.add('active');
+                STATE.activeCategory = league;
+                renderMatches();
+            }
+        }
+
+        if (target.classList.contains('tab-btn')) {
+            const filter = target.dataset.filter;
+            if (filter) {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                target.classList.add('active');
+                STATE.activeFilter = filter;
+                renderMatches();
+            }
+        }
+
+        // Selección Gallos
+        if (target.classList.contains('btn-roulette')) {
+            document.querySelectorAll('.btn-roulette').forEach(b => b.classList.remove('selected'));
+            target.classList.add('selected');
+        }
+
+        // Modales de Auth
         if (target.id === 'btn-open-login') openAuthModal('login');
         if (target.id === 'btn-open-register') openAuthModal('register');
         if (target.id === 'btn-close-auth') closeAuthModal();
         if (target.id === 'tab-auth-login') switchAuthTab('login');
         if (target.id === 'tab-auth-register') switchAuthTab('register');
 
-        // Profile & Logout
-        if (target.id === 'btn-toggle-profile') {
+        // Menú de Perfil
+        if (target.id === 'btn-toggle-profile' || target.closest('#btn-toggle-profile')) {
             document.getElementById('profile-dropdown')?.classList.toggle('hidden');
         }
         if (target.id === 'btn-logout') handleLogout();
 
-        // Comments
+        // Ver Historial de Apuestas
+        if (target.id === 'btn-show-history' || target.id === 'btn-toggle-my-bets') {
+            document.getElementById('tab-slip-mybets')?.click();
+            document.getElementById('profile-dropdown')?.classList.add('hidden');
+        }
+
+        // Comentarios
         if (target.id === 'btn-send-comment') sendComment();
 
-        // Welcome Bonus
+        // Reclamar Bono de Bienvenida
         if (target.id === 'btn-claim-welcome-bonus') {
             if (!STATE.currentUser) {
                 openAuthModal('register');
@@ -321,7 +371,13 @@ function initEventListeners() {
             saveDatabase();
             updateUI();
             confetti({ particleCount: 120, spread: 80 });
-            Swal.fire({ icon: 'success', title: '¡Bono Activado!', text: 'Se acreditaron RD$ 10,000.00 de bono.' });
+            Swal.fire({ icon: 'success', title: '¡Bono Activado!', text: 'Se acreditaron RD$ 10,000.00 de bono a su billetera.' });
+        }
+
+        // Parlay Rápido Promocional
+        if (target.id === 'btn-quick-parlay') {
+            setBetMode('parlay');
+            Swal.fire({ icon: 'info', title: 'Modo Parlay Activado', text: 'Seleccione 2 o más cuotas deportivas para calcular el multiplicador acumulado.' });
         }
 
         // Billetera & Modales de Pago
@@ -350,7 +406,22 @@ function initEventListeners() {
             document.getElementById('form-deposit-crypto')?.classList.toggle('hidden', STATE.activePayMethod !== 'crypto');
         }
 
-        // Modos de Boleto (Simple / Parlay)
+        // Pestañas del Boleto
+        if (target.id === 'tab-slip-betslip') {
+            document.getElementById('tab-slip-betslip')?.classList.add('active');
+            document.getElementById('tab-slip-mybets')?.classList.remove('active');
+            document.getElementById('slip-content-betslip')?.classList.remove('hidden');
+            document.getElementById('slip-content-mybets')?.classList.add('hidden');
+        }
+        if (target.id === 'tab-slip-mybets') {
+            document.getElementById('tab-slip-mybets')?.classList.add('active');
+            document.getElementById('tab-slip-betslip')?.classList.remove('active');
+            document.getElementById('slip-content-mybets')?.classList.remove('hidden');
+            document.getElementById('slip-content-betslip')?.classList.add('hidden');
+            renderMyBets();
+        }
+
+        // Modos de Boleto
         if (target.id === 'btn-mode-single') setBetMode('single');
         if (target.id === 'btn-mode-parlay') setBetMode('parlay');
 
@@ -367,7 +438,7 @@ function initEventListeners() {
             }
         }
 
-        // Sellar Apuesta & Sorteo
+        // Sellar Apuestas & Sorteos
         if (target.id === 'btn-place-bet') placeBet();
         if (target.id === 'btn-play-pale') playPale();
         if (target.id === 'btn-spin-gallo') playGallos();
