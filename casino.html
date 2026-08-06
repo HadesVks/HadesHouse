@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hades House | Casino Virtual & Gallera HD 🇩🇴</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme rd-style">
+    <div class="flag-bar"></div>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="index.html" class="logo-brand">
+                <img src="logo.jpg" alt="Hades House Logo" class="brand-logo-img">
+                <div class="logo-text-group">
+                    <span class="logo-text">HADES <span class="accent-text">HOUSE</span></span>
+                    <span class="logo-subtext">CASINO VIRTUAL HD</span>
+                </div>
+            </a>
+            <nav class="nav-categories">
+                <a href="index.html" class="cat-btn"><i class="fa-solid fa-house"></i> Inicio / Deportes</a>
+                <a href="sorteos.html" class="cat-btn"><i class="fa-solid fa-ticket"></i> Sorteos & Palé</a>
+                <a href="casino.html" class="cat-btn active highlight-casino"><i class="fa-solid fa-dice"></i> Casino Virtual</a>
+                <a href="billetera.html" class="cat-btn"><i class="fa-solid fa-wallet"></i> Billetera Real</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-layout" style="grid-template-columns: 1fr; max-width: 900px;">
+        <section class="main-content">
+            <div class="section-header">
+                <h1 class="page-title"><i class="fa-solid fa-dice"></i> Casino Virtual & La Gallera HD</h1>
+            </div>
+            <div class="casino-card" style="margin-top: 20px;">
+                <div class="casino-card-header">
+                    <h3><i class="fa-solid fa-feather-pointed"></i> La Gallera Virtual HD</h3>
+                    <span class="badge-live">EN VIVO</span>
+                </div>
+                <div class="gallos-ring">
+                    <div class="gallo-box indio">
+                        <h4>🐓 Gallo Indio</h4>
+                        <span class="gallo-odds">1.95</span>
+                    </div>
+                    <div class="vs-badge">VS</div>
+                    <div class="gallo-box giro">
+                        <h4>🐓 Gallo Giro</h4>
+                        <span class="gallo-odds">1.85</span>
+                    </div>
+                </div>
+                <div class="roulette-bet-options">
+                    <button class="btn-roulette red" data-choice="indio">APOSTAR AL INDIO (1.95)</button>
+                    <button class="btn-roulette black" data-choice="giro">APOSTAR AL GIRO (1.85)</button>
+                </div>
+                <div class="crash-controls" style="margin-top: 16px;">
+                    <div class="input-group">
+                        <label for="gallo-stake">Monto de Apuesta (RD$)</label>
+                        <input type="number" id="gallo-stake" value="200" min="50">
+                    </div>
+                    <button class="btn-primary" id="btn-spin-gallo">Soltar los Gallos</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

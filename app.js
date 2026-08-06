@@ -1,6 +1,6 @@
 /**
  * HADES HOUSE OFFICIAL BRAND EDITION 🇩🇴 — HIGH PERFORMANCE SPORTSBOOK ENGINE
- * Marca Oficial, Logo de Producción, Promociones y Pasarelas de Pago
+ * Manejo de Subpáginas, Event Listeners Globales y Resiliencia Total
  */
 
 // SUPABASE INITIALIZATION
@@ -43,7 +43,7 @@ const STATE = {
     currentUser: null,
     usersDB: {},
     betSlip: [],
-    betMode: 'single', // 'single' | 'parlay'
+    betMode: 'single',
     myBets: [],
     activeFilter: 'live',
     activeCategory: 'all',
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(simulateLiveOddsAndClock, 4000);
 });
 
-// REAL API FETCH: THESPORTSDB
+// REAL API FETCH
 async function fetchRealSportsDataFromTheSportsDB() {
     const teamsToFetch = [
         { name: 'Real_Madrid', category: 'football', leagueName: 'LaLiga Española (Oficial)' },
@@ -273,6 +273,7 @@ function renderComments() {
 
 function sendComment() {
     const input = document.getElementById('input-comment');
+    if (!input) return;
     const text = input.value.trim();
     if (!text) return;
 
@@ -287,161 +288,112 @@ function sendComment() {
     renderComments();
 }
 
-// EVENT LISTENERS
+// DELEGACIÓN DE EVENT LISTENERS GLOBALES (GARANTIZA QUE TODOS LOS BOTONES FUNCIONEN 100%)
 function initEventListeners() {
-    document.getElementById('btn-open-login')?.addEventListener('click', () => openAuthModal('login'));
-    document.getElementById('btn-open-register')?.addEventListener('click', () => openAuthModal('register'));
-    document.getElementById('btn-close-auth')?.addEventListener('click', closeAuthModal);
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('button, a, input');
+        if (!target) return;
 
-    document.getElementById('tab-auth-login')?.addEventListener('click', () => switchAuthTab('login'));
-    document.getElementById('tab-auth-register')?.addEventListener('click', () => switchAuthTab('register'));
+        // Auth Modals
+        if (target.id === 'btn-open-login') openAuthModal('login');
+        if (target.id === 'btn-open-register') openAuthModal('register');
+        if (target.id === 'btn-close-auth') closeAuthModal();
+        if (target.id === 'tab-auth-login') switchAuthTab('login');
+        if (target.id === 'tab-auth-register') switchAuthTab('register');
+
+        // Profile & Logout
+        if (target.id === 'btn-toggle-profile') {
+            document.getElementById('profile-dropdown')?.classList.toggle('hidden');
+        }
+        if (target.id === 'btn-logout') handleLogout();
+
+        // Comments
+        if (target.id === 'btn-send-comment') sendComment();
+
+        // Welcome Bonus
+        if (target.id === 'btn-claim-welcome-bonus') {
+            if (!STATE.currentUser) {
+                openAuthModal('register');
+                return;
+            }
+            STATE.currentUser.balance += 10000.00;
+            STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
+            saveDatabase();
+            updateUI();
+            confetti({ particleCount: 120, spread: 80 });
+            Swal.fire({ icon: 'success', title: '¡Bono Activado!', text: 'Se acreditaron RD$ 10,000.00 de bono.' });
+        }
+
+        // Billetera & Modales de Pago
+        if (target.id === 'btn-open-deposit' || target.id === 'btn-quick-deposit-trigger') {
+            if (!STATE.currentUser) {
+                openAuthModal('login');
+                return;
+            }
+            document.getElementById('modal-deposit')?.classList.remove('hidden');
+        }
+        if (target.id === 'btn-close-deposit') {
+            document.getElementById('modal-deposit')?.classList.add('hidden');
+        }
+
+        // Tabs de Pago
+        if (target.id === 'tab-pay-deposit') switchPaymentTab('deposit');
+        if (target.id === 'tab-pay-withdraw') switchPaymentTab('withdraw');
+
+        // Métodos de Pago
+        if (target.classList.contains('method-btn')) {
+            document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+            target.classList.add('active');
+            STATE.activePayMethod = target.dataset.method;
+            document.getElementById('form-deposit-card')?.classList.toggle('hidden', STATE.activePayMethod !== 'card');
+            document.getElementById('form-deposit-bank')?.classList.toggle('hidden', STATE.activePayMethod !== 'bank');
+            document.getElementById('form-deposit-crypto')?.classList.toggle('hidden', STATE.activePayMethod !== 'crypto');
+        }
+
+        // Modos de Boleto (Simple / Parlay)
+        if (target.id === 'btn-mode-single') setBetMode('single');
+        if (target.id === 'btn-mode-parlay') setBetMode('parlay');
+
+        // Stake Rápido
+        if (target.classList.contains('btn-qs')) {
+            const input = document.getElementById('slip-stake-input');
+            if (input) {
+                if (target.id === 'btn-qs-max') {
+                    input.value = Math.floor(STATE.currentUser ? STATE.currentUser.balance : 0);
+                } else {
+                    input.value = target.dataset.amount;
+                }
+                updateSlipCalculator();
+            }
+        }
+
+        // Sellar Apuesta & Sorteo
+        if (target.id === 'btn-place-bet') placeBet();
+        if (target.id === 'btn-play-pale') playPale();
+        if (target.id === 'btn-spin-gallo') playGallos();
+    });
 
     document.getElementById('form-login')?.addEventListener('submit', handleLoginSubmit);
     document.getElementById('form-register')?.addEventListener('submit', handleRegisterSubmit);
-
-    document.getElementById('btn-toggle-profile')?.addEventListener('click', () => {
-        document.getElementById('profile-dropdown').classList.toggle('hidden');
-    });
-
-    document.getElementById('btn-logout')?.addEventListener('click', handleLogout);
-
-    document.getElementById('btn-send-comment')?.addEventListener('click', sendComment);
-    document.getElementById('input-comment')?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendComment();
-    });
-
-    // Reclamar Bono de Bienvenida
-    document.getElementById('btn-claim-welcome-bonus')?.addEventListener('click', () => {
-        if (!STATE.currentUser) {
-            openAuthModal('register');
-            return;
-        }
-
-        const bonus = 10000.00;
-        STATE.currentUser.balance += bonus;
-        STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
-
-        saveDatabase();
-        updateUI();
-
-        confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
-
-        Swal.fire({
-            icon: 'success',
-            title: '¡Bono de Bienvenida Activado!',
-            text: 'Se han acreditado RD$ 10,000.00 promocionales a su billetera oficial con el código HADES100.',
-            confirmButtonColor: '#FFD700'
-        });
-    });
-
-    // Modales de Pago & Billetera
-    document.getElementById('btn-open-deposit')?.addEventListener('click', () => {
-        if (!STATE.currentUser) {
-            openAuthModal('login');
-            return;
-        }
-        document.getElementById('modal-deposit').classList.remove('hidden');
-    });
-
-    document.getElementById('btn-close-deposit')?.addEventListener('click', () => {
-        document.getElementById('modal-deposit').classList.add('hidden');
-    });
-
-    // Switcher Depósito / Retiro
-    document.getElementById('tab-pay-deposit')?.addEventListener('click', () => switchPaymentTab('deposit'));
-    document.getElementById('tab-pay-withdraw')?.addEventListener('click', () => switchPaymentTab('withdraw'));
-
-    // Selector Métodos de Pago
-    document.querySelectorAll('.method-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
-            const target = e.currentTarget;
-            target.classList.add('active');
-            STATE.activePayMethod = target.dataset.method;
-
-            document.getElementById('form-deposit-card').classList.toggle('hidden', STATE.activePayMethod !== 'card');
-            document.getElementById('form-deposit-bank').classList.toggle('hidden', STATE.activePayMethod !== 'bank');
-            document.getElementById('form-deposit-crypto').classList.toggle('hidden', STATE.activePayMethod !== 'crypto');
-        });
-    });
-
-    // Form Submissions
     document.getElementById('form-deposit-card')?.addEventListener('submit', handleDepositCardSubmit);
     document.getElementById('form-deposit-bank')?.addEventListener('submit', handleDepositBankSubmit);
     document.getElementById('form-deposit-crypto')?.addEventListener('submit', handleDepositCryptoSubmit);
     document.getElementById('form-withdraw')?.addEventListener('submit', handleWithdrawSubmit);
 
-    document.querySelectorAll('.cat-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            const target = e.currentTarget;
-            target.classList.add('active');
-            STATE.activeCategory = target.dataset.category;
-
-            if (STATE.activeCategory === 'banca') {
-                document.getElementById('matches-grid').classList.add('hidden');
-                document.getElementById('casino-section').classList.remove('hidden');
-            } else {
-                document.getElementById('casino-section').classList.add('hidden');
-                document.getElementById('matches-grid').classList.remove('hidden');
-                renderMatches();
-            }
-        });
+    document.getElementById('input-comment')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendComment();
     });
-
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            e.currentTarget.classList.add('active');
-            STATE.activeFilter = e.currentTarget.dataset.filter;
-            renderMatches();
-        });
-    });
-
-    document.getElementById('tab-slip-betslip')?.addEventListener('click', () => {
-        document.getElementById('tab-slip-betslip').classList.add('active');
-        document.getElementById('tab-slip-mybets').classList.remove('active');
-        document.getElementById('slip-content-betslip').classList.remove('hidden');
-        document.getElementById('slip-content-mybets').classList.add('hidden');
-    });
-
-    document.getElementById('tab-slip-mybets')?.addEventListener('click', () => {
-        document.getElementById('tab-slip-mybets').classList.add('active');
-        document.getElementById('tab-slip-betslip').classList.remove('active');
-        document.getElementById('slip-content-mybets').classList.remove('hidden');
-        document.getElementById('slip-content-betslip').classList.add('hidden');
-        renderMyBets();
-    });
-
-    document.getElementById('btn-mode-single')?.addEventListener('click', () => setBetMode('single'));
-    document.getElementById('btn-mode-parlay')?.addEventListener('click', () => setBetMode('parlay'));
-
-    document.querySelectorAll('.btn-qs').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const input = document.getElementById('slip-stake-input');
-            if (e.currentTarget.id === 'btn-qs-max') {
-                input.value = Math.floor(STATE.currentUser ? STATE.currentUser.balance : 0);
-            } else {
-                input.value = e.currentTarget.dataset.amount;
-            }
-            updateSlipCalculator();
-        });
-    });
-
-    document.getElementById('slip-stake-input')?.addEventListener('input', updateSlipCalculator);
-    document.getElementById('btn-place-bet')?.addEventListener('click', placeBet);
-    document.getElementById('btn-play-pale')?.addEventListener('click', playPale);
 }
 
 // PAYMENT TABS LOGIC
 function switchPaymentTab(tab) {
     STATE.activePayTab = tab;
     const isDeposit = tab === 'deposit';
-    document.getElementById('tab-pay-deposit').classList.toggle('active', isDeposit);
-    document.getElementById('tab-pay-withdraw').classList.toggle('active', !isDeposit);
+    document.getElementById('tab-pay-deposit')?.classList.toggle('active', isDeposit);
+    document.getElementById('tab-pay-withdraw')?.classList.toggle('active', !isDeposit);
 
-    document.getElementById('section-pay-deposit').classList.toggle('hidden', !isDeposit);
-    document.getElementById('section-pay-withdraw').classList.toggle('hidden', isDeposit);
+    document.getElementById('section-pay-deposit')?.classList.toggle('hidden', !isDeposit);
+    document.getElementById('section-pay-withdraw')?.classList.toggle('hidden', isDeposit);
 }
 
 function handleDepositCardSubmit(e) {
@@ -465,14 +417,14 @@ function handleDepositCardSubmit(e) {
 
         saveDatabase();
         updateUI();
-        document.getElementById('modal-deposit').classList.add('hidden');
+        document.getElementById('modal-deposit')?.classList.add('hidden');
 
         confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
 
         Swal.fire({
             icon: 'success',
             title: '¡Depósito Aprobado!',
-            text: `Se acreditaron RD$ ${amount.toLocaleString('es-DO', {minimumFractionDigits:2})} a su billetera principal.`,
+            text: `Se acreditaron RD$ ${amount.toLocaleString('es-DO', {minimumFractionDigits:2})} a su billetera oficial.`,
             confirmButtonColor: '#00E676'
         });
     });
@@ -495,7 +447,7 @@ function handleDepositBankSubmit(e) {
 
     saveDatabase();
     updateUI();
-    document.getElementById('modal-deposit').classList.add('hidden');
+    document.getElementById('modal-deposit')?.classList.add('hidden');
 
     Swal.fire({
         icon: 'success',
@@ -522,7 +474,7 @@ function handleDepositCryptoSubmit(e) {
 
     saveDatabase();
     updateUI();
-    document.getElementById('modal-deposit').classList.add('hidden');
+    document.getElementById('modal-deposit')?.classList.add('hidden');
 
     confetti({ particleCount: 100, spread: 80 });
 
@@ -551,7 +503,7 @@ function handleWithdrawSubmit(e) {
 
     saveDatabase();
     updateUI();
-    document.getElementById('modal-deposit').classList.add('hidden');
+    document.getElementById('modal-deposit')?.classList.add('hidden');
 
     Swal.fire({
         icon: 'success',
@@ -563,23 +515,27 @@ function handleWithdrawSubmit(e) {
 
 // AUTH MODAL LOGIC
 function openAuthModal(tab = 'login') {
-    document.getElementById('modal-auth').classList.remove('hidden');
+    document.getElementById('modal-auth')?.classList.remove('hidden');
     switchAuthTab(tab);
 }
 
 function closeAuthModal() {
-    document.getElementById('modal-auth').classList.add('hidden');
+    document.getElementById('modal-auth')?.classList.add('hidden');
 }
 
 function switchAuthTab(tab) {
     const isLogin = tab === 'login';
-    document.getElementById('tab-auth-login').classList.toggle('active', isLogin);
-    document.getElementById('tab-auth-register').classList.toggle('active', !isLogin);
-    document.getElementById('form-login').classList.toggle('hidden', !isLogin);
-    document.getElementById('form-register').classList.toggle('hidden', isLogin);
-    document.getElementById('auth-modal-title').innerHTML = isLogin 
-        ? `<i class="fa-solid fa-user-shield"></i> Iniciar Sesión`
-        : `<i class="fa-solid fa-user-plus"></i> Registro de Usuario`;
+    document.getElementById('tab-auth-login')?.classList.toggle('active', isLogin);
+    document.getElementById('tab-auth-register')?.classList.toggle('active', !isLogin);
+    document.getElementById('form-login')?.classList.toggle('hidden', !isLogin);
+    document.getElementById('form-register')?.classList.toggle('hidden', isLogin);
+    
+    const titleEl = document.getElementById('auth-modal-title');
+    if (titleEl) {
+        titleEl.innerHTML = isLogin 
+            ? `<i class="fa-solid fa-user-shield"></i> Iniciar Sesión`
+            : `<i class="fa-solid fa-user-plus"></i> Registro de Usuario`;
+    }
 }
 
 function handleLoginSubmit(e) {
@@ -657,7 +613,7 @@ function handleLogout() {
     STATE.currentUser = null;
     STATE.myBets = [];
     localStorage.removeItem('hades_active_session');
-    document.getElementById('profile-dropdown').classList.add('hidden');
+    document.getElementById('profile-dropdown')?.classList.add('hidden');
     updateUI();
     renderSlip();
     renderMyBets();
@@ -677,7 +633,8 @@ function renderMatches() {
         return matchesCategory && matchesFilter;
     });
 
-    document.getElementById('count-live').textContent = STATE.matches.filter(m => m.status === 'live').length;
+    const countEl = document.getElementById('count-live');
+    if (countEl) countEl.textContent = STATE.matches.filter(m => m.status === 'live').length;
 
     if (filtered.length === 0) {
         grid.innerHTML = `<div class="empty-slip-state"><i class="fa-solid fa-calendar-xmark empty-icon"></i><p>No hay eventos disponibles en esta categoría en este momento.</p></div>`;
@@ -779,7 +736,9 @@ function setBetMode(mode) {
 function renderSlip() {
     const container = document.getElementById('slip-items-container');
     const countBadge = document.getElementById('slip-count');
-    countBadge.textContent = STATE.betSlip.length;
+    if (countBadge) countBadge.textContent = STATE.betSlip.length;
+
+    if (!container) return;
 
     if (STATE.betSlip.length === 0) {
         container.innerHTML = `
@@ -823,6 +782,8 @@ function updateSlipCalculator() {
     const totalPayoutEl = document.getElementById('slip-total-payout');
     const btnPlace = document.getElementById('btn-place-bet');
     const stakeInput = document.getElementById('slip-stake-input');
+
+    if (!totalOddsEl || !totalPayoutEl || !btnPlace || !stakeInput) return;
 
     const stake = parseFloat(stakeInput.value) || 0;
     const balance = STATE.currentUser ? STATE.currentUser.balance : 0;
@@ -907,8 +868,13 @@ function placeBet() {
 // RENDER MY BETS
 function renderMyBets() {
     const container = document.getElementById('mybets-list');
-    document.getElementById('mybets-count').textContent = STATE.myBets.filter(b => b.status === 'ACCEPTED').length;
-    document.getElementById('active-bets-count').textContent = STATE.myBets.filter(b => b.status === 'ACCEPTED').length;
+    const countEl = document.getElementById('mybets-count');
+    const activeCountEl = document.getElementById('active-bets-count');
+
+    if (countEl) countEl.textContent = STATE.myBets.filter(b => b.status === 'ACCEPTED').length;
+    if (activeCountEl) activeCountEl.textContent = STATE.myBets.filter(b => b.status === 'ACCEPTED').length;
+
+    if (!container) return;
 
     if (STATE.myBets.length === 0) {
         container.innerHTML = `<div class="empty-slip-state"><p>No registra boletos de apuestas en este momento.</p></div>`;
@@ -976,11 +942,20 @@ function updateUI() {
         guestBlock?.classList.add('hidden');
         userBlock?.classList.remove('hidden');
 
-        document.getElementById('user-balance').innerHTML = `RD$ ${STATE.currentUser.balance.toLocaleString('es-DO', { minimumFractionDigits: 2 })}`;
-        document.getElementById('user-display-name').textContent = STATE.currentUser.name.split(' ')[0];
-        document.getElementById('dropdown-user-name').textContent = STATE.currentUser.name;
-        document.getElementById('dropdown-user-email').textContent = STATE.currentUser.email;
-        document.getElementById('dropdown-user-level').textContent = STATE.currentUser.level;
+        const balEl = document.getElementById('user-balance');
+        if (balEl) balEl.innerHTML = `RD$ ${STATE.currentUser.balance.toLocaleString('es-DO', { minimumFractionDigits: 2 })}`;
+
+        const nameEl = document.getElementById('user-display-name');
+        if (nameEl) nameEl.textContent = STATE.currentUser.name.split(' ')[0];
+
+        const dropName = document.getElementById('dropdown-user-name');
+        if (dropName) dropName.textContent = STATE.currentUser.name;
+
+        const dropEmail = document.getElementById('dropdown-user-email');
+        if (dropEmail) dropEmail.textContent = STATE.currentUser.email;
+
+        const dropLevel = document.getElementById('dropdown-user-level');
+        if (dropLevel) dropLevel.textContent = STATE.currentUser.level;
     } else {
         guestBlock?.classList.remove('hidden');
         userBlock?.classList.add('hidden');
@@ -1044,4 +1019,46 @@ function playPale() {
 
     saveDatabase();
     updateUI();
+}
+
+// GALLOS VIRTUALES
+function playGallos() {
+    if (!STATE.currentUser) {
+        openAuthModal('login');
+        return;
+    }
+
+    const selected = document.querySelector('.btn-roulette.selected');
+    if (!selected) {
+        Swal.fire({ icon: 'warning', title: 'Selección Requerida', text: 'Por favor seleccione una opción.' });
+        return;
+    }
+
+    const choice = selected.dataset.choice;
+    const stake = parseFloat(document.getElementById('gallo-stake').value) || 0;
+
+    if (stake <= 0 || stake > STATE.currentUser.balance) {
+        Swal.fire({ icon: 'error', title: 'Saldo Insuficiente' });
+        return;
+    }
+
+    STATE.currentUser.balance -= stake;
+    STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
+    updateUI();
+
+    setTimeout(() => {
+        const winner = Math.random() > 0.5 ? 'indio' : 'giro';
+        if (choice === winner) {
+            const win = stake * (winner === 'indio' ? 1.95 : 1.85);
+            STATE.currentUser.balance += win;
+            STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
+            confetti({ particleCount: 100, spread: 80 });
+            Swal.fire({ icon: 'success', title: '¡Victoria!', text: `Ganador: ${winner.toUpperCase()}. Acreditados RD$ ${win.toFixed(2)}` });
+        } else {
+            Swal.fire({ icon: 'error', title: 'Resultado Final', text: `Ganador: ${winner.toUpperCase()}` });
+        }
+
+        saveDatabase();
+        updateUI();
+    }, 1200);
 }

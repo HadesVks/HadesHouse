@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hades House | Sorteos de Quinielas & Palé Oficial 🇩🇴</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme rd-style">
+    <div class="flag-bar"></div>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="index.html" class="logo-brand">
+                <img src="logo.jpg" alt="Hades House Logo" class="brand-logo-img">
+                <div class="logo-text-group">
+                    <span class="logo-text">HADES <span class="accent-text">HOUSE</span></span>
+                    <span class="logo-subtext">SORTEOS & PALÉ</span>
+                </div>
+            </a>
+            <nav class="nav-categories">
+                <a href="index.html" class="cat-btn"><i class="fa-solid fa-house"></i> Inicio / Deportes</a>
+                <a href="sorteos.html" class="cat-btn active"><i class="fa-solid fa-ticket"></i> Sorteos & Palé</a>
+                <a href="casino.html" class="cat-btn highlight-casino"><i class="fa-solid fa-dice"></i> Casino Virtual</a>
+                <a href="billetera.html" class="cat-btn"><i class="fa-solid fa-wallet"></i> Billetera Real</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-layout" style="grid-template-columns: 1fr; max-width: 900px;">
+        <section class="main-content">
+            <div class="section-header">
+                <h1 class="page-title"><i class="fa-solid fa-ticket"></i> Sorteo Oficial de Quinielas & Palé RD</h1>
+            </div>
+            <div class="casino-card" style="margin-top: 20px;">
+                <div class="pale-box">
+                    <p>Selecciona dos números de la suerte entre el 00 y el 99 para participar por el premio multiplicador de <strong>100X tu jugada</strong>:</p>
+                    <div class="pale-inputs">
+                        <input type="number" id="num-1" min="0" max="99" placeholder="00">
+                        <span class="plus-sign">+</span>
+                        <input type="number" id="num-2" min="0" max="99" placeholder="77">
+                    </div>
+                    <div class="input-group" style="max-width: 300px; margin: 16px auto;">
+                        <label for="pale-stake">Monto de la Apuesta (RD$)</label>
+                        <input type="number" id="pale-stake" value="100" min="10">
+                    </div>
+                    <button class="btn-primary full-width" id="btn-play-pale" style="max-width: 300px; margin: 0 auto;">
+                        Confirmar Boleto de Palé
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

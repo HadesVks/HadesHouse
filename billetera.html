@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hades House | Centro de Pagos & Billetera Real 🇩🇴</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme rd-style">
+    <div class="flag-bar"></div>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="index.html" class="logo-brand">
+                <img src="logo.jpg" alt="Hades House Logo" class="brand-logo-img">
+                <div class="logo-text-group">
+                    <span class="logo-text">HADES <span class="accent-text">HOUSE</span></span>
+                    <span class="logo-subtext">BILLETERA OFICIAL</span>
+                </div>
+            </a>
+            <nav class="nav-categories">
+                <a href="index.html" class="cat-btn"><i class="fa-solid fa-house"></i> Inicio / Deportes</a>
+                <a href="sorteos.html" class="cat-btn"><i class="fa-solid fa-ticket"></i> Sorteos & Palé</a>
+                <a href="casino.html" class="cat-btn highlight-casino"><i class="fa-solid fa-dice"></i> Casino Virtual</a>
+                <a href="billetera.html" class="cat-btn active"><i class="fa-solid fa-wallet"></i> Billetera Real</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-layout" style="grid-template-columns: 1fr; max-width: 700px;">
+        <section class="main-content">
+            <div class="section-header">
+                <h1 class="page-title"><i class="fa-solid fa-building-columns"></i> Centro de Pagos & Billetera Real</h1>
+            </div>
+            
+            <div class="modal-card modal-payment-card" style="margin: 20px auto; max-width: 100%;">
+                <div class="payment-tabs-switcher">
+                    <button class="payment-tab-btn active" id="tab-pay-deposit">
+                        <i class="fa-solid fa-arrow-down-left-and-arrow-up-right"></i> Depositar Fondos
+                    </button>
+                    <button class="payment-tab-btn" id="tab-pay-withdraw">
+                        <i class="fa-solid fa-hand-holding-dollar"></i> Retirar Ganancias
+                    </button>
+                </div>
+
+                <div class="payment-section-content" id="section-pay-deposit">
+                    <div class="payment-method-selector">
+                        <label>Seleccione el Método de Pago:</label>
+                        <div class="methods-grid">
+                            <button class="method-btn active" data-method="card">
+                                <i class="fa-solid fa-credit-card"></i> Tarjeta RD$
+                            </button>
+                            <button class="method-btn" data-method="bank">
+                                <i class="fa-solid fa-building-columns"></i> Banco RD
+                            </button>
+                            <button class="method-btn" data-method="crypto">
+                                <i class="fa-brands fa-bitcoin"></i> USDT Cripto
+                            </button>
+                        </div>
+                    </div>
+
+                    <form id="form-deposit-card" class="payment-subform">
+                        <div class="form-group">
+                            <label>Monto a Depositar (RD$)</label>
+                            <input type="number" id="dep-card-amount" value="1000" min="100" step="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Número de Tarjeta</label>
+                            <input type="text" id="dep-card-number" placeholder="4532 •••• •••• 8892" maxlength="19" required>
+                        </div>
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label>Vencimiento</label>
+                                <input type="text" placeholder="MM/AA" maxlength="5" required>
+                            </div>
+                            <div class="form-group">
+                                <label>CVV</label>
+                                <input type="password" placeholder="123" maxlength="4" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary full-width margin-top-12">
+                            <i class="fa-solid fa-lock"></i> Procesar Depósito Seguro
+                        </button>
+                    </form>
+
+                    <form id="form-deposit-bank" class="payment-subform hidden">
+                        <div class="bank-details-box">
+                            <p><strong>Cuentas Bancarias Autorizadas:</strong></p>
+                            <small>• <strong>Banco Popular:</strong> 792019284 (Hades House SRL)</small><br>
+                            <small>• <strong>Banreservas:</strong> 960192837 (Hades House SRL)</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Monto Transferido (RD$)</label>
+                            <input type="number" id="dep-bank-amount" value="2000" min="500" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Número de Confirmación Bancaria</label>
+                            <input type="text" id="dep-bank-ref" placeholder="Ej: REF-99201827" required>
+                        </div>
+                        <button type="submit" class="btn-primary full-width margin-top-12">
+                            <i class="fa-solid fa-file-invoice-dollar"></i> Validar Transferencia Bancaria
+                        </button>
+                    </form>
+
+                    <form id="form-deposit-crypto" class="payment-subform hidden">
+                        <div class="crypto-qr-box">
+                            <div class="qr-placeholder">
+                                <i class="fa-solid fa-qrcode qr-icon"></i>
+                            </div>
+                            <p class="crypto-addr-label">Enviar USDT (Red TRC-20):</p>
+                            <code class="crypto-address" id="crypto-address-text">TXh8Jk29LpQzM902WxE91KsA88Z7k</code>
+                        </div>
+                        <div class="form-group">
+                            <label>Hash de Transacción / TXID</label>
+                            <input type="text" id="dep-crypto-txid" placeholder="Paste TXID Hash..." required>
+                        </div>
+                        <button type="submit" class="btn-primary full-width margin-top-12">
+                            <i class="fa-solid fa-bolt"></i> Verificar Transacción Cripto
+                        </button>
+                    </form>
+                </div>
+
+                <div class="payment-section-content hidden" id="section-pay-withdraw">
+                    <form id="form-withdraw" class="payment-subform">
+                        <div class="form-group">
+                            <label>Monto a Retirar (RD$)</label>
+                            <input type="number" id="with-amount" value="1000" min="500" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Método de Retiro</label>
+                            <select id="with-method-select" class="form-select">
+                                <option value="bank_popular">Banco Popular Dominicano</option>
+                                <option value="bank_banreservas">Banreservas</option>
+                                <option value="bank_bhd">Banco BHD</option>
+                                <option value="usdt_trc20">USDT Cripto (TRC-20)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Número de Cuenta o Billetera</label>
+                            <input type="text" id="with-account-number" placeholder="Ej: 801928374 o TXh8..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre Completo del Titular</label>
+                            <input type="text" id="with-holder-name" placeholder="Nombre del titular" required>
+                        </div>
+                        <button type="submit" class="btn-primary full-width margin-top-12">
+                            <i class="fa-solid fa-hand-holding-dollar"></i> Solicitar Retiro de Ganancias
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
