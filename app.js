@@ -1,6 +1,6 @@
 /**
  * HADES HOUSE OFFICIAL BRAND EDITION 🇩🇴 — HIGH PERFORMANCE SPORTSBOOK ENGINE
- * Verificación y Auditoría 100% Total de Botones e Interacciones
+ * Experiencia Fluida: Permite armar boletos libremente sin estar logueado previamente
  */
 
 // SUPABASE INITIALIZATION
@@ -288,7 +288,7 @@ function sendComment() {
     renderComments();
 }
 
-// EVENT LISTENERS GLOBALES (AUDITORÍA Y FUNCIONALIDAD COMPLETA EN CADA BOTÓN)
+// EVENT LISTENERS GLOBALES
 function initEventListeners() {
     document.addEventListener('click', (e) => {
         const target = e.target.closest('button, a, input, .cat-btn, .league-link, .tab-btn, .btn-roulette');
@@ -759,13 +759,8 @@ function renderMatches() {
     });
 }
 
-// TOGGLE ODDS
+// TOGGLE ODDS (PERMITE ARMAR BOLETO A VISITANTES ANTES DE LOGIN)
 window.toggleOdds = function(matchId, pickCode, pickName, oddValue) {
-    if (!STATE.currentUser) {
-        openAuthModal('login');
-        return;
-    }
-
     const match = STATE.matches.find(m => m.id === matchId);
     if (!match) return;
 
@@ -857,7 +852,6 @@ function updateSlipCalculator() {
     if (!totalOddsEl || !totalPayoutEl || !btnPlace || !stakeInput) return;
 
     const stake = parseFloat(stakeInput.value) || 0;
-    const balance = STATE.currentUser ? STATE.currentUser.balance : 0;
 
     if (STATE.betSlip.length === 0) {
         totalOddsEl.textContent = '1.00';
@@ -878,10 +872,10 @@ function updateSlipCalculator() {
     totalOddsEl.textContent = totalOdds.toFixed(2);
     totalPayoutEl.textContent = `RD$ ${potentialPayout.toLocaleString('es-DO', { minimumFractionDigits: 2 })}`;
 
-    btnPlace.disabled = (!STATE.currentUser || stake <= 0 || stake > balance);
+    btnPlace.disabled = (stake <= 0);
 }
 
-// PLACE BET
+// PLACE BET (PIDE LOGIN SOLO AL SELLAR EL TICKET)
 function placeBet() {
     if (!STATE.currentUser) {
         openAuthModal('login');
