@@ -1,25 +1,47 @@
 /**
  * HADES HOUSE — SISTEMA PROFESIONAL DE APUESTAS & AUTENTICACIÓN DB
- * Persistencia Híbrida: Supabase Client SDK + Base de Datos de Usuarios Persistente
+ * Incluye Usuarios Administradores Predeterminados y Cartelera Deportiva Expandida
  */
 
-// SUPABASE INITIALIZATION (CONFIGURABLE)
-const SUPABASE_URL = 'https://xyzcompany.supabase.co'; // Reemplazable con credencial del cliente
+// SUPABASE INITIALIZATION
+const SUPABASE_URL = 'https://xyzcompany.supabase.co';
 const SUPABASE_KEY = 'public-anon-key';
 
 let supabase = null;
 if (window.supabase && typeof window.supabase.createClient === 'function') {
     try {
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    } catch (e) {
-        console.warn('Supabase no inicializado con llaves remotas, utilizando motor DB local de alta fidelidad.');
-    }
+    } catch (e) {}
 }
+
+// USUARIOS ADMINISTRADORES PREDETERMINADOS
+const DEFAULT_ADMINS = {
+    'admin@hadeshouse.com': {
+        id: 'USR-ADMIN-01',
+        name: 'Administrador Hades House',
+        email: 'admin@hadeshouse.com',
+        password: 'admin123456',
+        level: 'VIP Administrador',
+        isAdmin: true,
+        balance: 500000.00,
+        createdAt: '2026-01-01T00:00:00.000Z'
+    },
+    'hades@hadeshouse.com': {
+        id: 'USR-ADMIN-02',
+        name: 'Hades Master (Banquero)',
+        email: 'hades@hadeshouse.com',
+        password: 'hades2026',
+        level: 'Pro Banquero',
+        isAdmin: true,
+        balance: 1000000.00,
+        createdAt: '2026-01-01T00:00:00.000Z'
+    }
+};
 
 // STATE MANAGEMENT
 const STATE = {
-    currentUser: null, // { id, name, email, level: 'VIP Bronce', balance: 25000.00 }
-    usersDB: {}, // Simulación / Caché DB de Usuarios
+    currentUser: null,
+    usersDB: {},
     betSlip: [],
     betMode: 'single', // 'single' | 'parlay'
     myBets: [],
@@ -28,22 +50,22 @@ const STATE = {
     matches: [
         {
             id: 'm1',
-            league: 'LIDOM (Béisbol Dominicano)',
+            league: 'LIDOM (Pelota Invernal RD 🇩🇴)',
             category: 'lidom',
-            teamHome: 'Tigres del Licey',
-            teamAway: 'Águilas Cibaeñas',
+            teamHome: 'Tigres del Licey 💙',
+            teamAway: 'Águilas Cibaeñas 💛',
             scoreHome: 4,
             scoreAway: 3,
-            minute: 8,
+            minute: 8, // 8vo Inning
             status: 'live',
             odds: { home: 1.80, draw: 12.0, away: 2.10 }
         },
         {
             id: 'm2',
-            league: 'LIDOM (Béisbol Dominicano)',
+            league: 'LIDOM (Pelota Invernal RD 🇩🇴)',
             category: 'lidom',
-            teamHome: 'Leones del Escogido',
-            teamAway: 'Gigantes del Cibao',
+            teamHome: 'Leones del Escogido ❤️',
+            teamAway: 'Gigantes del Cibao 🤎',
             scoreHome: 2,
             scoreAway: 1,
             minute: 6,
@@ -52,10 +74,10 @@ const STATE = {
         },
         {
             id: 'm3',
-            league: 'MLB (Grandes Ligas)',
+            league: 'Grandes Ligas (MLB)',
             category: 'mlb',
-            teamHome: 'NY Yankees',
-            teamAway: 'Boston Red Sox',
+            teamHome: 'NY Yankees (Juan Soto 🇩🇴)',
+            teamAway: 'Boston Red Sox (Devers 🇩🇴)',
             scoreHome: 5,
             scoreAway: 4,
             minute: 7,
@@ -64,7 +86,55 @@ const STATE = {
         },
         {
             id: 'm4',
-            league: 'LNB Baloncesto Profesional',
+            league: 'Grandes Ligas (MLB)',
+            category: 'mlb',
+            teamHome: 'LA Dodgers (Shohei Ohtani)',
+            teamAway: 'SD Padres (Tatis Jr 🇩🇴)',
+            scoreHome: 3,
+            scoreAway: 2,
+            minute: 5,
+            status: 'live',
+            odds: { home: 1.70, draw: 14.0, away: 2.20 }
+        },
+        {
+            id: 'm5',
+            league: 'UEFA Champions League',
+            category: 'football',
+            teamHome: 'Real Madrid (Vinícius Jr)',
+            teamAway: 'FC Barcelona (Lamine Yamal)',
+            scoreHome: 2,
+            scoreAway: 1,
+            minute: 78,
+            status: 'live',
+            odds: { home: 1.85, draw: 3.40, away: 4.10 }
+        },
+        {
+            id: 'm6',
+            league: 'Premier League',
+            category: 'football',
+            teamHome: 'Manchester City (Haaland)',
+            teamAway: 'Arsenal FC (Saka)',
+            scoreHome: 1,
+            scoreAway: 1,
+            minute: 54,
+            status: 'live',
+            odds: { home: 2.10, draw: 3.25, away: 3.50 }
+        },
+        {
+            id: 'm7',
+            league: 'NBA League (Baloncesto)',
+            category: 'basketball',
+            teamHome: 'LA Lakers (LeBron James)',
+            teamAway: 'Golden State Warriors (Curry)',
+            scoreHome: 104,
+            scoreAway: 101,
+            minute: 42,
+            status: 'live',
+            odds: { home: 1.85, draw: 15.0, away: 1.95 }
+        },
+        {
+            id: 'm8',
+            league: 'LNB Baloncesto RD 🇩🇴',
             category: 'basketball',
             teamHome: 'Reales de La Vega',
             teamAway: 'Titanes del Distrito',
@@ -75,11 +145,11 @@ const STATE = {
             odds: { home: 1.75, draw: 18.0, away: 2.10 }
         },
         {
-            id: 'm5',
-            league: 'LDF Fútbol Dominicano',
+            id: 'm9',
+            league: 'LDF Fútbol Dominicano 🇩🇴',
             category: 'ldf',
-            teamHome: 'Cibao FC',
-            teamAway: 'Atlético Pantoja',
+            teamHome: 'Cibao FC 🧡',
+            teamAway: 'Atlético Pantoja 💙',
             scoreHome: 1,
             scoreAway: 0,
             minute: 65,
@@ -87,11 +157,23 @@ const STATE = {
             odds: { home: 1.90, draw: 3.20, away: 4.00 }
         },
         {
-            id: 'm6',
-            league: 'LIDOM (Próximo Juego)',
+            id: 'm10',
+            league: 'UFC Championship MMA',
+            category: 'ufc',
+            teamHome: 'Alex Pereira 🇧🇷',
+            teamAway: 'Magomed Ankalaev 🇷🇺',
+            scoreHome: 0,
+            scoreAway: 0,
+            minute: 3,
+            status: 'live',
+            odds: { home: 1.70, draw: 25.0, away: 2.20 }
+        },
+        {
+            id: 'm11',
+            league: 'LIDOM (Próximo Juego 🇩🇴)',
             category: 'lidom',
-            teamHome: 'Estrellas Orientales',
-            teamAway: 'Toros del Este',
+            teamHome: 'Estrellas Orientales 💚',
+            teamAway: 'Toros del Este 🧡',
             scoreHome: 0,
             scoreAway: 0,
             minute: 0,
@@ -117,7 +199,18 @@ function loadDatabase() {
     const rawDB = localStorage.getItem('hades_users_db');
     if (rawDB) {
         try { STATE.usersDB = JSON.parse(rawDB); } catch (e) { STATE.usersDB = {}; }
+    } else {
+        STATE.usersDB = {};
     }
+
+    // Inyectar o actualizar siempre los usuarios Administradores por defecto
+    Object.keys(DEFAULT_ADMINS).forEach(email => {
+        if (!STATE.usersDB[email]) {
+            STATE.usersDB[email] = DEFAULT_ADMINS[email];
+        }
+    });
+
+    localStorage.setItem('hades_users_db', JSON.stringify(STATE.usersDB));
 }
 
 function saveDatabase() {
@@ -131,9 +224,12 @@ function saveDatabase() {
 
 function checkSession() {
     const activeEmail = localStorage.getItem('hades_active_session');
-    if (activeEmail && STATE.usersDB[activeEmail]) {
-        STATE.currentUser = STATE.usersDB[activeEmail];
-        loadUserBets();
+    if (activeEmail) {
+        const cleanEmail = JSON.parse(activeEmail);
+        if (STATE.usersDB[cleanEmail]) {
+            STATE.currentUser = STATE.usersDB[cleanEmail];
+            loadUserBets();
+        }
     }
 }
 
@@ -219,7 +315,7 @@ function initEventListeners() {
         renderMyBets();
     });
 
-    // Toggle modo de apuesta (Simple / Parlay)
+    // Toggle modo de apuesta
     document.getElementById('btn-mode-single')?.addEventListener('click', () => setBetMode('single'));
     document.getElementById('btn-mode-parlay')?.addEventListener('click', () => setBetMode('parlay'));
 
@@ -314,7 +410,7 @@ function handleLoginSubmit(e) {
     updateUI();
     closeAuthModal();
 
-    alert(`✅ Bienvenido de nuevo, ${user.name}`);
+    alert(`✅ Bienvenido de nuevo, ${user.name} (${user.level})`);
 }
 
 function handleRegisterSubmit(e) {
@@ -334,6 +430,7 @@ function handleRegisterSubmit(e) {
         email,
         password,
         level: 'Nivel Bronce',
+        isAdmin: false,
         balance: 25000.00,
         createdAt: new Date().toISOString()
     };
