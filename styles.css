@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HADES HOUSE — STYLES & PROFESSIONAL AUTHENTICATION SYSTEM
+   HADES HOUSE PRO EDITION 🇩🇴 — HIGH PERFORMANCE SPORTSBOOK STYLES
    ========================================================================== */
 
 :root {
@@ -73,7 +73,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 /* Header */
 .main-header {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(8, 12, 20, 0.92);
+    background: rgba(8, 12, 20, 0.94);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-color);
 }
@@ -132,14 +132,11 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 }
 
 /* Auth Guest Buttons */
-.auth-buttons-guest {
-    display: flex; align-items: center; gap: 10px;
-}
+.auth-buttons-guest { display: flex; align-items: center; gap: 10px; }
 
 .btn-secondary-header {
     background: rgba(255, 255, 255, 0.06);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    color: var(--text-primary); border: 1px solid var(--border-color);
     padding: 8px 16px; border-radius: var(--radius-md);
     font-weight: 700; font-size: 0.85rem;
 }
@@ -147,15 +144,11 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 .btn-primary-header {
     background: linear-gradient(135deg, var(--rd-blue), #004080);
     color: #fff; padding: 8px 16px; border-radius: var(--radius-md);
-    font-weight: 700; font-size: 0.85rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 700; font-size: 0.85rem; border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* User Logged Widget & Profile Dropdown */
-.user-logged-block {
-    display: flex; align-items: center; gap: 14px;
-}
-
+.user-logged-block { display: flex; align-items: center; gap: 14px; }
 .balance-display { display: flex; flex-direction: column; align-items: flex-end; }
 .balance-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; }
 .balance-amount { font-size: 1.15rem; font-weight: 900; color: var(--accent-emerald); }
@@ -163,21 +156,16 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 .profile-menu-wrapper { position: relative; }
 
 .btn-profile {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
-    padding: 6px 12px; border-radius: var(--radius-md);
-    display: flex; align-items: center; gap: 8px;
-    font-weight: 700; font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color);
+    color: var(--text-primary); padding: 6px 12px; border-radius: var(--radius-md);
+    display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.85rem;
 }
 
 .profile-dropdown {
     position: absolute; top: 120%; right: 0;
     width: 220px; background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
-    padding: 12px; z-index: 150;
+    border: 1px solid var(--border-color); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card); padding: 12px; z-index: 150;
 }
 
 .dropdown-header { display: flex; flex-direction: column; margin-bottom: 8px; }
@@ -299,6 +287,32 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
     background: rgba(206, 17, 38, 0.2); color: #FF6B6B; border-color: rgba(206, 17, 38, 0.4);
 }
 
+/* Match Tracker 2D Widget */
+.match-tracker-container {
+    background: var(--bg-card); border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: var(--radius-xl); padding: 16px; margin-bottom: 20px; box-shadow: var(--shadow-card);
+}
+
+.tracker-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.badge-live-tracker { background: rgba(206, 17, 38, 0.3); color: #FF6B6B; font-weight: 800; font-size: 0.7rem; padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(206,17,38,0.5); }
+.tracker-header h3 { font-size: 1.1rem; color: var(--text-primary); }
+
+.tracker-body { display: grid; grid-template-columns: 1fr 280px; gap: 16px; align-items: center; }
+
+.pitch-2d {
+    height: 120px; background: linear-gradient(135deg, #0A2E1A, #051A0E);
+    border: 2px solid rgba(0, 230, 118, 0.4); border-radius: var(--radius-md);
+    position: relative; display: flex; align-items: center; justify-content: center; padding: 12px;
+}
+
+.pitch-event-text {
+    font-size: 0.9rem; font-weight: 800; color: #FFF; text-align: center;
+    background: rgba(0,0,0,0.6); padding: 8px 14px; border-radius: 20px; border: 1px solid var(--accent-emerald);
+}
+
+.tracker-stats-chart { background: rgba(0,0,0,0.3); border-radius: var(--radius-md); padding: 8px; }
+
+/* Main Content & Section */
 .main-content { display: flex; flex-direction: column; gap: 20px; }
 .section-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 .section-title-wrap { display: flex; align-items: center; gap: 12px; }
@@ -428,7 +442,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 
 .btn-cashout { background: linear-gradient(135deg, var(--primary-gold), #FF8F00); color: #000; font-weight: 900; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.8rem; width: 100%; margin-top: 8px; }
 
-/* Modals & Auth Styling */
+/* Modals & Auth */
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: center; justify-content: center; }
 .modal-card { background: var(--bg-card); border: 1px solid var(--border-glow); border-radius: var(--radius-xl); width: 90%; max-width: 420px; padding: 24px; }
 .modal-auth-card { max-width: 440px; border-color: rgba(255, 215, 0, 0.3); }
@@ -462,8 +476,6 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 
 @keyframes flamePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-@keyframes flashGreen { 0% { background: rgba(0, 230, 118, 0.4); } 100% { background: transparent; } }
-@keyframes flashRed { 0% { background: rgba(229, 57, 53, 0.4); } 100% { background: transparent; } }
 
 .hidden { display: none !important; }
 
@@ -471,4 +483,5 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
     .app-layout { grid-template-columns: 1fr; }
     .sidebar-left { display: none; }
     .sidebar-right { position: static; }
+    .tracker-body { grid-template-columns: 1fr; }
 }

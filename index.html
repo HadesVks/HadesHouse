@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hades House — Plataforma Profesional de Apuestas & Casino Virtual 🇩🇴</title>
-    <meta name="description" content="Plataforma profesional de apuestas deportivas y casino virtual. LIDOM, MLB, NBA, LDF, cuotas dinámicas en tiempo real y gestión de saldo.">
-    <meta name="keywords" content="apuestas deportivas, banca virtual, lidom, mlb, quinielas, casino virtual, deportes dominicanos, apuestas online">
+    <title>Hades House — Casa de Apuestas & Casino Virtual 🇩🇴</title>
+    <meta name="description" content="Plataforma profesional de apuestas deportivas y casino virtual. Cobertura en vivo de LIDOM, MLB, Champions League, NBA, LDF, gráficos estadísticos y Cash Out instantáneo.">
+    <meta name="keywords" content="apuestas deportivas, casa de apuestas, lidom, licey, aguilas, mlb, parlay, cash out, casino online">
     <meta name="author" content="HadesVks">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Hades House — Plataforma de Apuestas Deportivas">
-    <meta property="og:description" content="Cuotas en vivo, boleto de apuestas simples y combinadas, cash out e historial de transacciones.">
+    <meta property="og:title" content="Hades House — Casa de Apuestas Pro">
+    <meta property="og:description" content="Plataforma de apuestas deportivas en vivo con estadísticas, Match Tracker 2D, Cash Out y Casino.">
     <meta property="og:type" content="website">
 
     <!-- Fonts Google (Outfit & Inter) -->
@@ -18,8 +18,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- SweetAlert2 (Modales Pro) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Chart.js (Gráficos Estadísticos) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Supabase JS Client SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -29,16 +39,16 @@
 </head>
 <body class="dark-theme rd-style">
 
-    <!-- BANNER DECORATIVO -->
+    <!-- BANNER DECORATIVO TRICOLOR -->
     <div class="flag-bar"></div>
 
-    <!-- NAVBAR HEADER -->
+    <!-- NAVBAR HEADER PRO -->
     <header class="main-header" id="main-header">
         <div class="header-container">
             <div class="logo-brand" id="logo-brand">
                 <i class="fa-solid fa-trophy logo-icon"></i>
                 <span class="logo-text">HADES <span class="accent-text">HOUSE</span></span>
-                <span class="badge-demo">PRO LAB</span>
+                <span class="badge-demo">PRO EDITION</span>
             </div>
 
             <!-- Sports Nav Categories -->
@@ -47,42 +57,42 @@
                     <i class="fa-solid fa-layer-group"></i> Todos los Deportes
                 </button>
                 <button class="cat-btn" data-category="lidom" id="cat-btn-lidom">
-                    <i class="fa-solid fa-baseball"></i> LIDOM (Béisbol RD)
+                    <i class="fa-solid fa-baseball"></i> LIDOM (Pelota RD)
                 </button>
                 <button class="cat-btn" data-category="mlb" id="cat-btn-mlb">
                     <i class="fa-solid fa-baseball-bat-ball"></i> MLB
                 </button>
+                <button class="cat-btn" data-category="football" id="cat-btn-football">
+                    <i class="fa-solid fa-futbol"></i> Fútbol / Champions
+                </button>
                 <button class="cat-btn" data-category="basketball" id="cat-btn-basketball">
                     <i class="fa-solid fa-basketball"></i> NBA / LNB
                 </button>
-                <button class="cat-btn" data-category="ldf" id="cat-btn-ldf">
-                    <i class="fa-solid fa-futbol"></i> LDF Dominicana
-                </button>
                 <button class="cat-btn highlight-casino" data-category="banca" id="cat-btn-banca">
-                    <i class="fa-solid fa-dice-five"></i> Sorteos & Quinielas
+                    <i class="fa-solid fa-dice-five"></i> Sorteos & Palé
                 </button>
                 <button class="cat-btn highlight-gallos" data-category="gallos" id="cat-btn-gallos">
-                    <i class="fa-solid fa-feather-pointed"></i> Simulador Hípico / Gallos
+                    <i class="fa-solid fa-feather-pointed"></i> Gallera Pro
                 </button>
             </nav>
 
             <!-- User Auth & Wallet Widget -->
             <div class="wallet-widget" id="wallet-widget">
                 
-                <!-- GUEST STATE (Sin iniciar sesión) -->
+                <!-- GUEST STATE -->
                 <div class="auth-buttons-guest" id="guest-auth-block">
                     <button class="btn-secondary-header" id="btn-open-login">
                         <i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión
                     </button>
                     <button class="btn-primary-header" id="btn-open-register">
-                        <i class="fa-solid fa-user-plus"></i> Registro
+                        <i class="fa-solid fa-user-plus"></i> Registro Real
                     </button>
                 </div>
 
                 <!-- USER LOGGED STATE -->
                 <div class="user-logged-block hidden" id="user-logged-block">
                     <div class="balance-display">
-                        <span class="balance-label">BILLETERA PRINCIPAL</span>
+                        <span class="balance-label">SALDO DISPONIBLE</span>
                         <span class="balance-amount" id="user-balance">RD$ 0.00</span>
                     </div>
                     <button class="btn-deposit" id="btn-open-deposit">
@@ -122,17 +132,17 @@
         </div>
     </header>
 
-    <!-- HERO TICKER -->
+    <!-- HERO TICKER EN VIVO -->
     <section class="hero-ticker-section">
         <div class="ticker-content">
             <div class="ticker-item">
-                <span class="ticker-pulse"></span> ⚾ <strong>LIDOM EN DIRECTO:</strong> Tigres del Licey vs Águilas Cibaeñas — Octavo Inning
+                <span class="ticker-pulse"></span> ⚾ <strong>LIDOM EN DIRECTO:</strong> Licey 4 - 3 Águilas (8vo Inning) — ¡Jonrón con hombres en base!
             </div>
             <div class="ticker-item">
-                🔒 <strong>SISTEMA DE AUTENTICACIÓN PRO:</strong> Registro seguro con encriptación de datos de usuario.
+                ⚽ <strong>CHAMPIONS LEAGUE:</strong> Real Madrid vs Barcelona (2-1) Min 82' — Cuotas en movimiento constante.
             </div>
             <div class="ticker-item">
-                ⚡ <strong>CASH OUT EN TIEMPO REAL:</strong> Cierre de apuestas anticipado con ajuste automático de valor.
+                ⚡ <strong>CASH OUT PRO:</strong> Vende tu ticket en vivo antes del silbato final y asegura tus ganancias.
             </div>
         </div>
     </section>
@@ -143,45 +153,62 @@
         <!-- SIDEBAR DEPORTE / FILTROS -->
         <aside class="sidebar-left" id="sidebar-left">
             <div class="sidebar-block">
-                <h3 class="sidebar-title"><i class="fa-solid fa-trophy"></i> Competiciones Principales</h3>
+                <h3 class="sidebar-title"><i class="fa-solid fa-trophy"></i> Ligas Destacadas</h3>
                 <ul class="league-list">
-                    <li><a href="#" class="league-link active" data-league="all"><i class="fa-solid fa-globe"></i> Todos los Eventos</a></li>
-                    <li><a href="#" class="league-link" data-league="lidom"><i class="fa-solid fa-baseball"></i> LIDOM (Béisbol Dominicana)</a></li>
+                    <li><a href="#" class="league-link active" data-league="all"><i class="fa-solid fa-globe"></i> Todos los Deportes</a></li>
+                    <li><a href="#" class="league-link" data-league="lidom"><i class="fa-solid fa-baseball"></i> LIDOM (Béisbol RD)</a></li>
                     <li><a href="#" class="league-link" data-league="mlb"><i class="fa-solid fa-baseball-bat-ball"></i> MLB (Grandes Ligas)</a></li>
-                    <li><a href="#" class="league-link" data-league="lnb"><i class="fa-solid fa-basketball"></i> LNB (Baloncesto RD)</a></li>
-                    <li><a href="#" class="league-link" data-league="ldf"><i class="fa-solid fa-futbol"></i> LDF (Fútbol Dominicana)</a></li>
-                    <li><a href="#" class="league-link" data-league="ufc"><i class="fa-solid fa-hand-fist"></i> UFC / Artes Marciales</a></li>
+                    <li><a href="#" class="league-link" data-league="champions"><i class="fa-solid fa-star"></i> UEFA Champions League</a></li>
+                    <li><a href="#" class="league-link" data-league="nba"><i class="fa-solid fa-basketball"></i> NBA League</a></li>
+                    <li><a href="#" class="league-link" data-league="ufc"><i class="fa-solid fa-hand-fist"></i> UFC / MMA</a></li>
                 </ul>
             </div>
 
+            <!-- PROMO PARLAY BONUS -->
             <div class="sidebar-block promo-card-rd">
                 <i class="fa-solid fa-crown promo-icon"></i>
-                <h4>Boleto Combinado (Parlay)</h4>
-                <p>Combina 3 selecciones deportivas y multiplica el retorno de tu apuesta hasta un 300%.</p>
-                <button class="btn-secondary-sm" id="btn-quick-parlay">Crear Combinada Pro</button>
+                <h4>Bonus Combinado +25%</h4>
+                <p>Arma un Parlay de 3+ selecciones y multiplica tu retorno automático.</p>
+                <button class="btn-secondary-sm" id="btn-quick-parlay">Crear Parlay Pro</button>
             </div>
 
-            <!-- SIMULATOR CONTROL PANEL (OPERATOR TOOL) -->
+            <!-- PANEL DE CONTROL OPERADOR / SIMULACIÓN -->
             <div class="sidebar-block operator-panel">
-                <h3 class="sidebar-title"><i class="fa-solid fa-sliders"></i> Panel de Simulación</h3>
-                <p class="text-muted-sm">Control de eventos en vivo:</p>
+                <h3 class="sidebar-title"><i class="fa-solid fa-sliders"></i> Simulación en Vivo</h3>
+                <p class="text-muted-sm">Avanza eventos en tiempo real:</p>
                 <button class="btn-action-sm" id="btn-simulate-minute">
                     <i class="fa-solid fa-forward-step"></i> Avanzar Evento +1 Min
                 </button>
                 <button class="btn-action-sm danger" id="btn-finish-matches">
-                    <i class="fa-solid fa-flag-checkered"></i> Concluir & Liquidar Eventos
+                    <i class="fa-solid fa-flag-checkered"></i> Finalizar & Liquidar
                 </button>
             </div>
         </aside>
 
-        <!-- MAIN MATCHES LIST & SECTIONS -->
+        <!-- MAIN CONTENT (MATCHES & TRACKER & CASINO) -->
         <section class="main-content" id="main-content">
+
+            <!-- MATCH TRACKER 2D (VISUALIZADOR EN TIEMPO REAL) -->
+            <div class="match-tracker-container" id="match-tracker-container">
+                <div class="tracker-header">
+                    <span class="badge-live-tracker">🔴 MATCH TRACKER EN VIVO</span>
+                    <h3 id="tracker-title">Tigres del Licey vs Águilas Cibaeñas</h3>
+                </div>
+                <div class="tracker-body">
+                    <div class="pitch-2d" id="pitch-2d">
+                        <div class="pitch-event-text" id="pitch-event-text">⚾ ¡Batazo profundo al jardín central! Licey amenaza con hombres en 2da y 3ra.</div>
+                    </div>
+                    <div class="tracker-stats-chart">
+                        <canvas id="liveStatsChart" height="110"></canvas>
+                    </div>
+                </div>
+            </div>
 
             <!-- SECTION HEADER -->
             <div class="section-header">
                 <div class="section-title-wrap">
-                    <h1 class="page-title" id="page-title">Mercados Deportivos & Cuotas en Directo</h1>
-                    <span class="live-indicator"><i class="fa-solid fa-circle blink"></i> EN VIVO</span>
+                    <h1 class="page-title" id="page-title">Mercados Deportivos & Cuotas en Vivo</h1>
+                    <span class="live-indicator"><i class="fa-solid fa-circle blink"></i> TRANSMISIÓN EN DIRECTO</span>
                 </div>
                 <div class="filter-tabs">
                     <button class="tab-btn active" data-filter="live" id="tab-filter-live">En Directo (<span id="count-live">0</span>)</button>
@@ -198,18 +225,18 @@
             <!-- BANCA & SORTEOS SECTION -->
             <div class="casino-section hidden" id="casino-section">
                 <div class="section-header">
-                    <h2 class="page-title"><i class="fa-solid fa-dice"></i> Sorteos & Quinielas Especiales</h2>
+                    <h2 class="page-title"><i class="fa-solid fa-dice"></i> Sorteos & Gallera Virtual</h2>
                 </div>
 
                 <div class="casino-grid">
                     <!-- GAME 1: QUINIELA Y PALÉ -->
                     <div class="casino-card" id="pale-card">
                         <div class="casino-card-header">
-                            <h3><i class="fa-solid fa-ticket"></i> Sorteo Combinado (Palé Especial)</h3>
-                            <span class="badge-hot">MULTIPLICADOR 100X</span>
+                            <h3><i class="fa-solid fa-ticket"></i> Sorteo de Quinielas & Palé RD</h3>
+                            <span class="badge-hot">PREMIO 100X</span>
                         </div>
                         <div class="pale-box">
-                            <p>Seleccione dos números entre 00 y 99:</p>
+                            <p>Elige dos números de la suerte (00 al 99):</p>
                             <div class="pale-inputs">
                                 <input type="number" id="num-1" min="0" max="99" placeholder="00">
                                 <span class="plus-sign">+</span>
@@ -220,38 +247,38 @@
                                 <input type="number" id="pale-stake" value="100" min="10">
                             </div>
                             <button class="btn-primary full-width" id="btn-play-pale" style="margin-top:12px;">
-                                Confirmar Boleto de Sorteo
+                                Confirmar Palé Ganador
                             </button>
                         </div>
                     </div>
 
-                    <!-- GAME 2: GALLERA VIRTUAL -->
+                    <!-- GAME 2: GALLERA VIRTUAL REAL EN CANVAS -->
                     <div class="casino-card" id="gallos-card">
                         <div class="casino-card-header">
-                            <h3><i class="fa-solid fa-feather-pointed"></i> Simulador Hípico / Eventos Tradicionales</h3>
-                            <span class="badge-live">EN VIVO</span>
+                            <h3><i class="fa-solid fa-feather-pointed"></i> La Gallera Virtual HD</h3>
+                            <span class="badge-live">EN VIVO EN EL REDONDEL</span>
                         </div>
                         <div class="gallos-ring">
                             <div class="gallo-box indio">
-                                <h4>Participante A (Indio)</h4>
+                                <h4>🐓 Gallo Indio</h4>
                                 <span class="gallo-odds">1.95</span>
                             </div>
                             <div class="vs-badge">VS</div>
                             <div class="gallo-box giro">
-                                <h4>Participante B (Giro)</h4>
+                                <h4>🐓 Gallo Giro</h4>
                                 <span class="gallo-odds">1.85</span>
                             </div>
                         </div>
                         <div class="roulette-bet-options">
-                            <button class="btn-roulette red" data-choice="indio">SELECCIONAR A (1.95)</button>
-                            <button class="btn-roulette black" data-choice="giro">SELECCIONAR B (1.85)</button>
+                            <button class="btn-roulette red" data-choice="indio">APOSTAR AL INDIO (1.95)</button>
+                            <button class="btn-roulette black" data-choice="giro">APOSTAR AL GIRO (1.85)</button>
                         </div>
                         <div class="crash-controls">
                             <div class="input-group">
-                                <label for="gallo-stake">Monto de Entrada (RD$)</label>
+                                <label for="gallo-stake">Monto (RD$)</label>
                                 <input type="number" id="gallo-stake" value="200" min="50">
                             </div>
-                            <button class="btn-primary" id="btn-spin-gallo">Iniciar Simulación</button>
+                            <button class="btn-primary" id="btn-spin-gallo">Soltar Gallos</button>
                         </div>
                     </div>
                 </div>
@@ -262,13 +289,13 @@
         <!-- RIGHT SLIP / MY BETS PANEL -->
         <aside class="sidebar-right" id="sidebar-right">
             
-            <!-- PANEL TABS (BOLETO / MIS APUESTAS) -->
+            <!-- PANEL TABS -->
             <div class="slip-tabs">
                 <button class="slip-tab active" id="tab-slip-betslip">
                     <i class="fa-solid fa-receipt"></i> Boleto (<span id="slip-count">0</span>)
                 </button>
                 <button class="slip-tab" id="tab-slip-mybets">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Mis Apuestas (<span id="mybets-count">0</span>)
+                    <i class="fa-solid fa-clock-rotate-left"></i> Mis Boletos (<span id="mybets-count">0</span>)
                 </button>
             </div>
 
@@ -290,12 +317,12 @@
                 <!-- SLIP FOOTER CALCULATOR -->
                 <div class="slip-summary" id="slip-summary">
                     <div class="summary-row">
-                        <span>Cuota Total Acumulada:</span>
+                        <span>Cuota Acumulada:</span>
                         <span class="total-odds" id="slip-total-odds">1.00</span>
                     </div>
 
                     <div class="stake-input-group">
-                        <label for="slip-stake-input">Monto de la Apuesta (RD$):</label>
+                        <label for="slip-stake-input">Monto a Apostar (RD$):</label>
                         <div class="stake-input-wrapper">
                             <input type="number" id="slip-stake-input" value="100" min="10" step="50">
                         </div>
@@ -306,7 +333,7 @@
                         <button class="btn-qs" data-amount="100">RD$100</button>
                         <button class="btn-qs" data-amount="500">RD$500</button>
                         <button class="btn-qs" data-amount="1000">RD$1K</button>
-                        <button class="btn-qs" id="btn-qs-max">SALDO MÁXIMO</button>
+                        <button class="btn-qs" id="btn-qs-max">TODO EL SALDO</button>
                     </div>
 
                     <div class="summary-row payout-row">
@@ -315,7 +342,7 @@
                     </div>
 
                     <button class="btn-place-bet" id="btn-place-bet" disabled>
-                        <i class="fa-solid fa-check-circle"></i> Confirmar y Sellar Apuesta
+                        <i class="fa-solid fa-check-circle"></i> Sellar Apuesta Pro
                     </button>
                 </div>
             </div>
@@ -340,13 +367,11 @@
             </div>
             <div class="modal-body">
                 
-                <!-- TAB SWITCHER LOGIN / REGISTRO -->
                 <div class="auth-tabs-switcher">
                     <button class="auth-tab-btn active" id="tab-auth-login">Iniciar Sesión</button>
                     <button class="auth-tab-btn" id="tab-auth-register">Crear Cuenta</button>
                 </div>
 
-                <!-- FORMULARIO DE LOGIN -->
                 <form id="form-login" class="auth-form">
                     <div class="form-group">
                         <label for="login-email">Correo Electrónico</label>
@@ -357,11 +382,10 @@
                         <input type="password" id="login-password" placeholder="••••••••" required>
                     </div>
                     <button type="submit" class="btn-primary full-width">
-                        <i class="fa-solid fa-right-to-bracket"></i> Acceder a la Cuenta
+                        <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                     </button>
                 </form>
 
-                <!-- FORMULARIO DE REGISTRO -->
                 <form id="form-register" class="auth-form hidden">
                     <div class="form-group">
                         <label for="reg-name">Nombre Completo</label>
@@ -380,7 +404,7 @@
                         <label for="reg-terms">Confirmo que soy mayor de 18 años y acepto los términos de servicio.</label>
                     </div>
                     <button type="submit" class="btn-primary full-width">
-                        <i class="fa-solid fa-user-check"></i> Registrar Cuenta Gratuita
+                        <i class="fa-solid fa-user-check"></i> Registrar Cuenta
                     </button>
                 </form>
 
