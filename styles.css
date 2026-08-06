@@ -1,20 +1,18 @@
 /* ==========================================================================
-   HADES HOUSE RD 🇩🇴 — LA BANCA DOMINICANA DE APUESTAS
+   HADES HOUSE — STYLES & PROFESSIONAL AUTHENTICATION SYSTEM
    ========================================================================== */
 
 :root {
-    /* HSL Colors */
     --bg-dark-hsl: 222, 35%, 6%;
     --bg-card-hsl: 220, 30%, 10%;
     --bg-card-hover-hsl: 220, 30%, 14%;
     
-    /* Colores RD Patria & Banca */
-    --rd-blue-hsl: 213, 100%, 19%;        /* #002D62 - Azul Dominicano */
-    --rd-red-hsl: 353, 85%, 44%;          /* #CE1126 - Rojo Dominicano */
-    --primary-orange-hsl: 15, 100%, 50%;   /* Fuego */
-    --primary-gold-hsl: 45, 100%, 51%;     /* #FFD700 - Oro */
-    --accent-emerald-hsl: 151, 100%, 45%;  /* #00E676 - Verde Ganador */
-    --accent-cyan-hsl: 187, 100%, 50%;     /* Neón */
+    --rd-blue-hsl: 213, 100%, 19%;        /* #002D62 */
+    --rd-red-hsl: 353, 85%, 44%;          /* #CE1126 */
+    --primary-orange-hsl: 15, 100%, 50%;
+    --primary-gold-hsl: 45, 100%, 51%;     /* #FFD700 */
+    --accent-emerald-hsl: 151, 100%, 45%;  /* #00E676 */
+    --accent-cyan-hsl: 187, 100%, 50%;
     --danger-red-hsl: 354, 85%, 54%;
 
     --bg-dark: hsl(var(--bg-dark-hsl));
@@ -60,7 +58,6 @@ body.dark-theme.rd-style {
     min-height: 100vh;
 }
 
-/* Barra Tricolor Dominicana */
 .flag-bar {
     height: 4px;
     background: linear-gradient(90deg, #002D62 0%, #002D62 45%, #FFFFFF 45%, #FFFFFF 55%, #CE1126 55%, #CE1126 100%);
@@ -76,7 +73,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 /* Header */
 .main-header {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(8, 12, 20, 0.9);
+    background: rgba(8, 12, 20, 0.92);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-color);
 }
@@ -134,21 +131,82 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
     border: 1px solid var(--primary-orange); color: #FFF;
 }
 
-/* Wallet Header Widget */
-.wallet-widget { display: flex; align-items: center; gap: 14px; }
+/* Auth Guest Buttons */
+.auth-buttons-guest {
+    display: flex; align-items: center; gap: 10px;
+}
+
+.btn-secondary-header {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px; border-radius: var(--radius-md);
+    font-weight: 700; font-size: 0.85rem;
+}
+
+.btn-primary-header {
+    background: linear-gradient(135deg, var(--rd-blue), #004080);
+    color: #fff; padding: 8px 16px; border-radius: var(--radius-md);
+    font-weight: 700; font-size: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* User Logged Widget & Profile Dropdown */
+.user-logged-block {
+    display: flex; align-items: center; gap: 14px;
+}
+
 .balance-display { display: flex; flex-direction: column; align-items: flex-end; }
 .balance-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; }
 .balance-amount { font-size: 1.15rem; font-weight: 900; color: var(--accent-emerald); }
 
-.btn-deposit {
-    background: linear-gradient(135deg, var(--rd-blue), #004080);
-    color: #fff; padding: 8px 14px; border-radius: var(--radius-md);
-    font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 15px rgba(0, 45, 98, 0.4);
+.profile-menu-wrapper { position: relative; }
+
+.btn-profile {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 6px 12px; border-radius: var(--radius-md);
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 700; font-size: 0.85rem;
 }
 
-.btn-deposit:hover { transform: translateY(-1px); }
+.profile-dropdown {
+    position: absolute; top: 120%; right: 0;
+    width: 220px; background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 12px; z-index: 150;
+}
+
+.dropdown-header { display: flex; flex-direction: column; margin-bottom: 8px; }
+.dropdown-header strong { font-size: 0.9rem; color: var(--text-primary); }
+.dropdown-header small { font-size: 0.75rem; color: var(--text-muted); word-break: break-all; }
+
+.badge-vip {
+    display: inline-block; margin-top: 6px;
+    background: rgba(255, 215, 0, 0.15); color: var(--primary-gold);
+    border: 1px solid rgba(255, 215, 0, 0.3); font-size: 0.65rem;
+    padding: 2px 8px; border-radius: 10px; font-weight: 800; align-self: flex-start;
+}
+
+.dropdown-divider { border: 0; border-top: 1px solid var(--border-color); margin: 8px 0; }
+
+.dropdown-item {
+    width: 100%; text-align: left; background: transparent;
+    color: var(--text-secondary); padding: 8px 10px; border-radius: var(--radius-sm);
+    font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px;
+}
+
+.dropdown-item:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-primary); }
+.dropdown-item.danger { color: var(--danger-red); }
+
+.btn-deposit {
+    background: linear-gradient(135deg, var(--accent-emerald), #00C853);
+    color: #000; padding: 8px 14px; border-radius: var(--radius-md);
+    font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;
+}
 
 .btn-icon {
     position: relative; background: rgba(255, 255, 255, 0.05);
@@ -187,7 +245,6 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
     display: grid; grid-template-columns: 240px 1fr 340px; gap: 20px; align-items: start;
 }
 
-/* Sidebar Left */
 .sidebar-left { display: flex; flex-direction: column; gap: 16px; }
 .sidebar-block {
     background: var(--bg-card); border: 1px solid var(--border-color);
@@ -229,7 +286,6 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
     font-size: 0.8rem; font-weight: 700; width: 100%;
 }
 
-/* Operator Panel */
 .operator-panel { border-color: rgba(255, 193, 7, 0.3); }
 .text-muted-sm { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px; }
 
@@ -243,7 +299,6 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
     background: rgba(206, 17, 38, 0.2); color: #FF6B6B; border-color: rgba(206, 17, 38, 0.4);
 }
 
-/* Main Content */
 .main-content { display: flex; flex-direction: column; gap: 20px; }
 .section-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 .section-title-wrap { display: flex; align-items: center; gap: 12px; }
@@ -264,7 +319,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 
 .tab-btn.active { background: var(--rd-blue); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
 
-/* Matches Cards Grid */
+/* Matches Grid */
 .matches-grid { display: flex; flex-direction: column; gap: 14px; }
 .match-card {
     background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg);
@@ -282,7 +337,6 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 .team-name { font-size: 1.05rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
 .team-score { font-size: 1.2rem; font-weight: 900; color: var(--primary-gold); }
 
-/* Odds Buttons */
 .odds-group { display: flex; gap: 8px; }
 .odds-btn {
     background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); border-radius: var(--radius-md);
@@ -297,23 +351,17 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 .odds-value { font-size: 1rem; font-weight: 900; color: var(--primary-gold); }
 .odds-btn.selected .odds-value { color: #fff; }
 
-/* Dynamic Odds Indicators */
-.odds-up { color: var(--accent-emerald) !important; animation: flashGreen 0.6s ease; }
-.odds-down { color: var(--danger-red) !important; animation: flashRed 0.6s ease; }
-
-/* Quiniela & Gallera Section */
+/* Quinielas & Casino */
 .casino-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
 .casino-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 20px; }
 .casino-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .badge-hot { background: linear-gradient(135deg, #CE1126, #FFD700); color: #000; font-weight: 900; font-size: 0.7rem; padding: 2px 8px; border-radius: 12px; }
 
-/* Palé Box */
 .pale-box { background: rgba(0, 45, 98, 0.2); border: 1px dashed rgba(255, 215, 0, 0.4); border-radius: var(--radius-lg); padding: 20px; text-align: center; }
 .pale-inputs { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 16px 0; }
 .pale-inputs input { width: 70px; height: 60px; font-size: 1.8rem; font-weight: 900; text-align: center; background: rgba(255,255,255,0.08); border: 2px solid var(--primary-gold); color: #fff; border-radius: var(--radius-md); }
 .plus-sign { font-size: 1.5rem; font-weight: 900; color: var(--primary-gold); }
 
-/* Gallera Ring */
 .gallos-ring { display: flex; align-items: center; justify-content: space-around; background: #080B12; border: 2px solid var(--primary-gold); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 16px; text-align: center; }
 .gallo-box { padding: 10px 16px; border-radius: var(--radius-md); }
 .gallo-box.indio { background: rgba(206, 17, 38, 0.2); border: 1px solid var(--rd-red); }
@@ -326,7 +374,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 .input-group label { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
 .input-group input { background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border-color); color: #fff; padding: 8px 12px; border-radius: var(--radius-md); font-size: 1rem; font-weight: 800; }
 
-.btn-primary { background: linear-gradient(135deg, var(--rd-red), #B30E20); color: #fff; font-weight: 900; padding: 10px 20px; border-radius: var(--radius-md); }
+.btn-primary { background: linear-gradient(135deg, var(--rd-blue), #004080); color: #fff; font-weight: 800; padding: 10px 20px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.2); }
 .btn-roulette { flex: 1; padding: 10px; border-radius: var(--radius-md); font-weight: 800; font-size: 0.85rem; }
 .btn-roulette.red { background: var(--rd-red); color: #fff; }
 .btn-roulette.black { background: var(--rd-blue); color: #fff; }
@@ -380,11 +428,25 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; tra
 
 .btn-cashout { background: linear-gradient(135deg, var(--primary-gold), #FF8F00); color: #000; font-weight: 900; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.8rem; width: 100%; margin-top: 8px; }
 
-/* Modals */
+/* Modals & Auth Styling */
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: center; justify-content: center; }
-.modal-card { background: var(--bg-card); border: 1px solid var(--primary-gold); border-radius: var(--radius-xl); width: 90%; max-width: 420px; padding: 24px; }
+.modal-card { background: var(--bg-card); border: 1px solid var(--border-glow); border-radius: var(--radius-xl); width: 90%; max-width: 420px; padding: 24px; }
+.modal-auth-card { max-width: 440px; border-color: rgba(255, 215, 0, 0.3); }
+
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .btn-close-modal { background: transparent; color: var(--text-muted); font-size: 1.5rem; }
+
+.auth-tabs-switcher { display: flex; background: rgba(255,255,255,0.05); padding: 4px; border-radius: var(--radius-md); margin-bottom: 20px; }
+.auth-tab-btn { flex: 1; background: transparent; color: var(--text-secondary); padding: 8px; font-weight: 700; font-size: 0.85rem; border-radius: var(--radius-sm); }
+.auth-tab-btn.active { background: var(--rd-blue); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+
+.auth-form { display: flex; flex-direction: column; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-group label { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
+.form-group input { background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border-color); color: #fff; padding: 10px 14px; border-radius: var(--radius-md); font-size: 0.95rem; }
+.form-checkbox { display: flex; align-items: flex-start; gap: 8px; font-size: 0.75rem; color: var(--text-muted); }
+.form-checkbox input { margin-top: 2px; }
+
 .faucet-box { background: rgba(255, 215, 0, 0.1); border: 1px dashed var(--primary-gold); border-radius: var(--radius-md); padding: 20px; text-align: center; margin: 16px 0; }
 .faucet-icon { font-size: 2.5rem; color: var(--primary-gold); margin-bottom: 8px; }
 .faucet-amount { font-size: 1.5rem; font-weight: 900; color: var(--accent-emerald); display: block; }

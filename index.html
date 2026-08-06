@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hades House — La Banca de Apuestas N°1 de República Dominicana 🇩🇴</title>
-    <meta name="description" content="La primera banca de apuestas virtual 100% dominicana. LIDOM, MLB, LNB, LDF, Palés, Quinielas, Gallos y Cash Out en tiempo real en Pesos Dominicanos (RD$).">
-    <meta name="keywords" content="apuestas dominicanas, lidom, licey, aguilas, banca de apuestas, pale, quiniela, casino dominicano, rd$, pesito">
+    <title>Hades House — Plataforma Profesional de Apuestas & Casino Virtual 🇩🇴</title>
+    <meta name="description" content="Plataforma profesional de apuestas deportivas y casino virtual. LIDOM, MLB, NBA, LDF, cuotas dinámicas en tiempo real y gestión de saldo.">
+    <meta name="keywords" content="apuestas deportivas, banca virtual, lidom, mlb, quinielas, casino virtual, deportes dominicanos, apuestas online">
     <meta name="author" content="HadesVks">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Hades House — La Banca Dominicana de Apuestas">
-    <meta property="og:description" content="Apuesta a la LIDOM, MLB, Palé, Quinielas y La Gallera Virtual con Cash Out en tiempo real.">
+    <meta property="og:title" content="Hades House — Plataforma de Apuestas Deportivas">
+    <meta property="og:description" content="Cuotas en vivo, boleto de apuestas simples y combinadas, cash out e historial de transacciones.">
     <meta property="og:type" content="website">
 
     <!-- Fonts Google (Outfit & Inter) -->
@@ -21,30 +21,33 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Supabase JS Client SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="dark-theme rd-style">
 
-    <!-- BANNER TRICOLOR PATRIO -->
+    <!-- BANNER DECORATIVO -->
     <div class="flag-bar"></div>
 
     <!-- NAVBAR HEADER -->
     <header class="main-header" id="main-header">
         <div class="header-container">
             <div class="logo-brand" id="logo-brand">
-                <i class="fa-solid fa-baseball logo-icon"></i>
-                <span class="logo-text">HADES <span class="accent-text">HOUSE RD 🇩🇴</span></span>
-                <span class="badge-demo">BANCA VIRTUAL</span>
+                <i class="fa-solid fa-trophy logo-icon"></i>
+                <span class="logo-text">HADES <span class="accent-text">HOUSE</span></span>
+                <span class="badge-demo">PRO LAB</span>
             </div>
 
             <!-- Sports Nav Categories -->
             <nav class="nav-categories" id="nav-categories">
                 <button class="cat-btn active" data-category="all" id="cat-btn-all">
-                    <i class="fa-solid fa-fire"></i> Todos los Juegos
+                    <i class="fa-solid fa-layer-group"></i> Todos los Deportes
                 </button>
                 <button class="cat-btn" data-category="lidom" id="cat-btn-lidom">
-                    <i class="fa-solid fa-baseball"></i> LIDOM / Pelota
+                    <i class="fa-solid fa-baseball"></i> LIDOM (Béisbol RD)
                 </button>
                 <button class="cat-btn" data-category="mlb" id="cat-btn-mlb">
                     <i class="fa-solid fa-baseball-bat-ball"></i> MLB
@@ -56,41 +59,80 @@
                     <i class="fa-solid fa-futbol"></i> LDF Dominicana
                 </button>
                 <button class="cat-btn highlight-casino" data-category="banca" id="cat-btn-banca">
-                    <i class="fa-solid fa-ticket"></i> Banca & Palé RD
+                    <i class="fa-solid fa-dice-five"></i> Sorteos & Quinielas
                 </button>
                 <button class="cat-btn highlight-gallos" data-category="gallos" id="cat-btn-gallos">
-                    <i class="fa-solid fa-feather-pointed"></i> La Gallera 🐓
+                    <i class="fa-solid fa-feather-pointed"></i> Simulador Hípico / Gallos
                 </button>
             </nav>
 
-            <!-- Wallet Header Widget (RD$) -->
+            <!-- User Auth & Wallet Widget -->
             <div class="wallet-widget" id="wallet-widget">
-                <div class="balance-display" id="balance-display-container">
-                    <span class="balance-label">MI CUENTA EN LA BANCA</span>
-                    <span class="balance-amount" id="user-balance">RD$ 25,000.00</span>
+                
+                <!-- GUEST STATE (Sin iniciar sesión) -->
+                <div class="auth-buttons-guest" id="guest-auth-block">
+                    <button class="btn-secondary-header" id="btn-open-login">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión
+                    </button>
+                    <button class="btn-primary-header" id="btn-open-register">
+                        <i class="fa-solid fa-user-plus"></i> Registro
+                    </button>
                 </div>
-                <button class="btn-deposit" id="btn-open-deposit">
-                    <i class="fa-solid fa-hand-holding-dollar"></i> Recargar Fiao
-                </button>
-                <button class="btn-icon" id="btn-toggle-my-bets" title="Mis Jugadas">
-                    <i class="fa-solid fa-receipt"></i>
-                    <span class="badge-counter" id="active-bets-count">0</span>
-                </button>
+
+                <!-- USER LOGGED STATE -->
+                <div class="user-logged-block hidden" id="user-logged-block">
+                    <div class="balance-display">
+                        <span class="balance-label">BILLETERA PRINCIPAL</span>
+                        <span class="balance-amount" id="user-balance">RD$ 0.00</span>
+                    </div>
+                    <button class="btn-deposit" id="btn-open-deposit">
+                        <i class="fa-solid fa-wallet"></i> Recargar
+                    </button>
+
+                    <!-- Profile Dropdown Menu -->
+                    <div class="profile-menu-wrapper">
+                        <button class="btn-profile" id="btn-toggle-profile">
+                            <i class="fa-solid fa-circle-user"></i>
+                            <span id="user-display-name">Usuario</span>
+                            <i class="fa-solid fa-chevron-down text-sm"></i>
+                        </button>
+                        <div class="profile-dropdown hidden" id="profile-dropdown">
+                            <div class="dropdown-header">
+                                <strong id="dropdown-user-name">Nombre</strong>
+                                <small id="dropdown-user-email">email@ejemplo.com</small>
+                                <span class="badge-vip" id="dropdown-user-level">Nivel Bronce</span>
+                            </div>
+                            <hr class="dropdown-divider">
+                            <button class="dropdown-item" id="btn-show-history">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Historial de Apuestas
+                            </button>
+                            <button class="dropdown-item danger" id="btn-logout">
+                                <i class="fa-solid fa-power-off"></i> Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="btn-icon" id="btn-toggle-my-bets" title="Mis Boletos">
+                        <i class="fa-solid fa-receipt"></i>
+                        <span class="badge-counter" id="active-bets-count">0</span>
+                    </button>
+                </div>
+
             </div>
         </div>
     </header>
 
-    <!-- HERO BANNER TICKER RD -->
+    <!-- HERO TICKER -->
     <section class="hero-ticker-section">
         <div class="ticker-content">
             <div class="ticker-item">
-                <span class="ticker-pulse"></span> ⚾ <strong>LIDOM EN VIVO:</strong> Tigres del Licey vs Águilas Cibaeñas (4-3) 8va Entrada 💥
+                <span class="ticker-pulse"></span> ⚾ <strong>LIDOM EN DIRECTO:</strong> Tigres del Licey vs Águilas Cibaeñas — Octavo Inning
             </div>
             <div class="ticker-item">
-                🇩🇴 <strong>PALÉ DE HOY:</strong> ¡Combina tus 2 números favoritos y cobra hasta 100x tu jugada!
+                🔒 <strong>SISTEMA DE AUTENTICACIÓN PRO:</strong> Registro seguro con encriptación de datos de usuario.
             </div>
             <div class="ticker-item">
-                ⚡ <strong>CASH OUT EN LA BANCA:</strong> ¿Se complicó el juego? Véndele el ticket a la banca antes del 9no Inning.
+                ⚡ <strong>CASH OUT EN TIEMPO REAL:</strong> Cierre de apuestas anticipado con ajuste automático de valor.
             </div>
         </div>
     </section>
@@ -101,50 +143,50 @@
         <!-- SIDEBAR DEPORTE / FILTROS -->
         <aside class="sidebar-left" id="sidebar-left">
             <div class="sidebar-block">
-                <h3 class="sidebar-title"><i class="fa-solid fa-trophy"></i> Ligas Dominicanas & Top</h3>
+                <h3 class="sidebar-title"><i class="fa-solid fa-trophy"></i> Competiciones Principales</h3>
                 <ul class="league-list">
-                    <li><a href="#" class="league-link active" data-league="all"><i class="fa-solid fa-star"></i> Todos los Deportes</a></li>
-                    <li><a href="#" class="league-link" data-league="lidom"><i class="fa-solid fa-baseball"></i> LIDOM (Pelota Invernal)</a></li>
-                    <li><a href="#" class="league-link" data-league="mlb"><i class="fa-solid fa-baseball-bat-ball"></i> Grandes Ligas (MLB)</a></li>
+                    <li><a href="#" class="league-link active" data-league="all"><i class="fa-solid fa-globe"></i> Todos los Eventos</a></li>
+                    <li><a href="#" class="league-link" data-league="lidom"><i class="fa-solid fa-baseball"></i> LIDOM (Béisbol Dominicana)</a></li>
+                    <li><a href="#" class="league-link" data-league="mlb"><i class="fa-solid fa-baseball-bat-ball"></i> MLB (Grandes Ligas)</a></li>
                     <li><a href="#" class="league-link" data-league="lnb"><i class="fa-solid fa-basketball"></i> LNB (Baloncesto RD)</a></li>
-                    <li><a href="#" class="league-link" data-league="ldf"><i class="fa-solid fa-futbol"></i> LDF (Fútbol Dominicano)</a></li>
-                    <li><a href="#" class="league-link" data-league="ufc"><i class="fa-solid fa-hand-fist"></i> UFC / Peleas</a></li>
+                    <li><a href="#" class="league-link" data-league="ldf"><i class="fa-solid fa-futbol"></i> LDF (Fútbol Dominicana)</a></li>
+                    <li><a href="#" class="league-link" data-league="ufc"><i class="fa-solid fa-hand-fist"></i> UFC / Artes Marciales</a></li>
                 </ul>
             </div>
 
             <div class="sidebar-block promo-card-rd">
                 <i class="fa-solid fa-crown promo-icon"></i>
-                <h4>¡El Palé Fijo!</h4>
-                <p>Combina Licey + Águilas + Juan Soto Cuadrangular y cobra el bonifacio dominicano.</p>
-                <button class="btn-secondary-sm" id="btn-quick-parlay">Armar Palé Ganador</button>
+                <h4>Boleto Combinado (Parlay)</h4>
+                <p>Combina 3 selecciones deportivas y multiplica el retorno de tu apuesta hasta un 300%.</p>
+                <button class="btn-secondary-sm" id="btn-quick-parlay">Crear Combinada Pro</button>
             </div>
 
-            <!-- SIMULATOR CONTROL PANEL (BANQUERO CONTROL) -->
+            <!-- SIMULATOR CONTROL PANEL (OPERATOR TOOL) -->
             <div class="sidebar-block operator-panel">
-                <h3 class="sidebar-title"><i class="fa-solid fa-user-ninja"></i> Control del Banquero</h3>
-                <p class="text-muted-sm">Avanza la pelota o simula el juego:</p>
+                <h3 class="sidebar-title"><i class="fa-solid fa-sliders"></i> Panel de Simulación</h3>
+                <p class="text-muted-sm">Control de eventos en vivo:</p>
                 <button class="btn-action-sm" id="btn-simulate-minute">
-                    <i class="fa-solid fa-forward-step"></i> Avanzar Inning / Minuto
+                    <i class="fa-solid fa-forward-step"></i> Avanzar Evento +1 Min
                 </button>
                 <button class="btn-action-sm danger" id="btn-finish-matches">
-                    <i class="fa-solid fa-flag-checkered"></i> Pitar el 9no Inning (Liquidar)
+                    <i class="fa-solid fa-flag-checkered"></i> Concluir & Liquidar Eventos
                 </button>
             </div>
         </aside>
 
-        <!-- MAIN MATCHES LIST & PALÉ / GALLOS SECTION -->
+        <!-- MAIN MATCHES LIST & SECTIONS -->
         <section class="main-content" id="main-content">
 
             <!-- SECTION HEADER -->
             <div class="section-header">
                 <div class="section-title-wrap">
-                    <h1 class="page-title" id="page-title">Cartelera de Juegos & Cuotas RD</h1>
-                    <span class="live-indicator"><i class="fa-solid fa-circle blink"></i> EN DIRECTO</span>
+                    <h1 class="page-title" id="page-title">Mercados Deportivos & Cuotas en Directo</h1>
+                    <span class="live-indicator"><i class="fa-solid fa-circle blink"></i> EN VIVO</span>
                 </div>
                 <div class="filter-tabs">
-                    <button class="tab-btn active" data-filter="live" id="tab-filter-live">Jugándose Ahora (<span id="count-live">0</span>)</button>
-                    <button class="tab-btn" data-filter="upcoming" id="tab-filter-upcoming">Por Empezar</button>
-                    <button class="tab-btn" data-filter="finished" id="tab-filter-finished">Terminados</button>
+                    <button class="tab-btn active" data-filter="live" id="tab-filter-live">En Directo (<span id="count-live">0</span>)</button>
+                    <button class="tab-btn" data-filter="upcoming" id="tab-filter-upcoming">Próximos</button>
+                    <button class="tab-btn" data-filter="finished" id="tab-filter-finished">Finalizados</button>
                 </div>
             </div>
 
@@ -153,63 +195,63 @@
                 <!-- Se puebla dinámicamente desde JavaScript -->
             </div>
 
-            <!-- BANCA & PALÉ SECTION -->
+            <!-- BANCA & SORTEOS SECTION -->
             <div class="casino-section hidden" id="casino-section">
                 <div class="section-header">
-                    <h2 class="page-title"><i class="fa-solid fa-ticket"></i> La Banca Dominicana — Quinielas & Palé</h2>
+                    <h2 class="page-title"><i class="fa-solid fa-dice"></i> Sorteos & Quinielas Especiales</h2>
                 </div>
 
                 <div class="casino-grid">
                     <!-- GAME 1: QUINIELA Y PALÉ -->
                     <div class="casino-card" id="pale-card">
                         <div class="casino-card-header">
-                            <h3><i class="fa-solid fa-dice-three"></i> El Palé de la Suerte RD</h3>
-                            <span class="badge-hot">PREMIO 100X</span>
+                            <h3><i class="fa-solid fa-ticket"></i> Sorteo Combinado (Palé Especial)</h3>
+                            <span class="badge-hot">MULTIPLICADOR 100X</span>
                         </div>
                         <div class="pale-box">
-                            <p>Elige tus 2 números de la suerte (00 al 99):</p>
+                            <p>Seleccione dos números entre 00 y 99:</p>
                             <div class="pale-inputs">
                                 <input type="number" id="num-1" min="0" max="99" placeholder="00">
                                 <span class="plus-sign">+</span>
                                 <input type="number" id="num-2" min="0" max="99" placeholder="77">
                             </div>
                             <div class="input-group" style="margin-top:12px;">
-                                <label for="pale-stake">Monto de la Jugada (RD$)</label>
+                                <label for="pale-stake">Monto de la Apuesta (RD$)</label>
                                 <input type="number" id="pale-stake" value="100" min="10">
                             </div>
                             <button class="btn-primary full-width" id="btn-play-pale" style="margin-top:12px;">
-                                🇩🇴 Sellar Palé (RD$100 -> Ganancia RD$10,000)
+                                Confirmar Boleto de Sorteo
                             </button>
                         </div>
                     </div>
 
-                    <!-- GAME 2: LA GALLERA VIRTUAL -->
+                    <!-- GAME 2: GALLERA VIRTUAL -->
                     <div class="casino-card" id="gallos-card">
                         <div class="casino-card-header">
-                            <h3><i class="fa-solid fa-feather-pointed"></i> La Gallera Virtual (Pelea de Gallos)</h3>
-                            <span class="badge-live">EN VIVO EN EL COLISEO</span>
+                            <h3><i class="fa-solid fa-feather-pointed"></i> Simulador Hípico / Eventos Tradicionales</h3>
+                            <span class="badge-live">EN VIVO</span>
                         </div>
                         <div class="gallos-ring">
                             <div class="gallo-box indio">
-                                <h4>🐓 Gallo Indio</h4>
+                                <h4>Participante A (Indio)</h4>
                                 <span class="gallo-odds">1.95</span>
                             </div>
                             <div class="vs-badge">VS</div>
                             <div class="gallo-box giro">
-                                <h4>🐓 Gallo Giro</h4>
+                                <h4>Participante B (Giro)</h4>
                                 <span class="gallo-odds">1.85</span>
                             </div>
                         </div>
                         <div class="roulette-bet-options">
-                            <button class="btn-roulette red" data-choice="indio">APOSTAR AL INDIO (1.95)</button>
-                            <button class="btn-roulette black" data-choice="giro">APOSTAR AL GIRO (1.85)</button>
+                            <button class="btn-roulette red" data-choice="indio">SELECCIONAR A (1.95)</button>
+                            <button class="btn-roulette black" data-choice="giro">SELECCIONAR B (1.85)</button>
                         </div>
                         <div class="crash-controls">
                             <div class="input-group">
-                                <label for="gallo-stake">Apuesta (RD$)</label>
+                                <label for="gallo-stake">Monto de Entrada (RD$)</label>
                                 <input type="number" id="gallo-stake" value="200" min="50">
                             </div>
-                            <button class="btn-primary" id="btn-spin-gallo">Soltar los Gallos</button>
+                            <button class="btn-primary" id="btn-spin-gallo">Iniciar Simulación</button>
                         </div>
                     </div>
                 </div>
@@ -220,41 +262,40 @@
         <!-- RIGHT SLIP / MY BETS PANEL -->
         <aside class="sidebar-right" id="sidebar-right">
             
-            <!-- PANEL TABS (TICKET / MIS JUGADAS) -->
+            <!-- PANEL TABS (BOLETO / MIS APUESTAS) -->
             <div class="slip-tabs">
                 <button class="slip-tab active" id="tab-slip-betslip">
-                    <i class="fa-solid fa-receipt"></i> Ticket de Jugada (<span id="slip-count">0</span>)
+                    <i class="fa-solid fa-receipt"></i> Boleto (<span id="slip-count">0</span>)
                 </button>
                 <button class="slip-tab" id="tab-slip-mybets">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Mis Tickets (<span id="mybets-count">0</span>)
+                    <i class="fa-solid fa-clock-rotate-left"></i> Mis Apuestas (<span id="mybets-count">0</span>)
                 </button>
             </div>
 
             <!-- SLIP CONTENT: BET SLIP -->
             <div class="slip-content" id="slip-content-betslip">
                 <div class="slip-mode-selector">
-                    <button class="mode-btn active" id="btn-mode-single">Derecho (Simple)</button>
-                    <button class="mode-btn" id="btn-mode-parlay">Palé (Combinada)</button>
+                    <button class="mode-btn active" id="btn-mode-single">Apuesta Simple</button>
+                    <button class="mode-btn" id="btn-mode-parlay">Combinada (Parlay)</button>
                 </div>
 
                 <div class="slip-items-container" id="slip-items-container">
-                    <!-- Items de apuesta se insertan dinámicamente -->
                     <div class="empty-slip-state" id="empty-slip-state">
                         <i class="fa-solid fa-ticket-simple empty-icon"></i>
-                        <p>Tu ticket está limpio manín</p>
-                        <small>Tócale a cualquier cuota para armar tu jugada.</small>
+                        <p>Su boleto de apuestas está vacío</p>
+                        <small>Haga clic sobre cualquier cuota para añadir una selección.</small>
                     </div>
                 </div>
 
                 <!-- SLIP FOOTER CALCULATOR -->
                 <div class="slip-summary" id="slip-summary">
                     <div class="summary-row">
-                        <span>Cuota de la Jugada:</span>
+                        <span>Cuota Total Acumulada:</span>
                         <span class="total-odds" id="slip-total-odds">1.00</span>
                     </div>
 
                     <div class="stake-input-group">
-                        <label for="slip-stake-input">¿Cuánto le vas a meter? (RD$):</label>
+                        <label for="slip-stake-input">Monto de la Apuesta (RD$):</label>
                         <div class="stake-input-wrapper">
                             <input type="number" id="slip-stake-input" value="100" min="10" step="50">
                         </div>
@@ -265,16 +306,16 @@
                         <button class="btn-qs" data-amount="100">RD$100</button>
                         <button class="btn-qs" data-amount="500">RD$500</button>
                         <button class="btn-qs" data-amount="1000">RD$1K</button>
-                        <button class="btn-qs" id="btn-qs-max">TODO EL CLAVO</button>
+                        <button class="btn-qs" id="btn-qs-max">SALDO MÁXIMO</button>
                     </div>
 
                     <div class="summary-row payout-row">
-                        <span>Premio Potencial:</span>
+                        <span>Retorno Estimado:</span>
                         <span class="total-payout" id="slip-total-payout">RD$ 0.00</span>
                     </div>
 
                     <button class="btn-place-bet" id="btn-place-bet" disabled>
-                        <i class="fa-solid fa-bolt"></i> Sellar Ticket en la Banca
+                        <i class="fa-solid fa-check-circle"></i> Confirmar y Sellar Apuesta
                     </button>
                 </div>
             </div>
@@ -290,15 +331,72 @@
 
     </main>
 
-    <!-- MODAL RECARGA / FIAO VIRTUAL -->
+    <!-- MODAL AUTENTICACIÓN: LOGIN & REGISTRO REAL -->
+    <div class="modal-overlay hidden" id="modal-auth">
+        <div class="modal-card modal-auth-card">
+            <div class="modal-header">
+                <h3 id="auth-modal-title"><i class="fa-solid fa-user-shield"></i> Iniciar Sesión</h3>
+                <button class="btn-close-modal" id="btn-close-auth">&times;</button>
+            </div>
+            <div class="modal-body">
+                
+                <!-- TAB SWITCHER LOGIN / REGISTRO -->
+                <div class="auth-tabs-switcher">
+                    <button class="auth-tab-btn active" id="tab-auth-login">Iniciar Sesión</button>
+                    <button class="auth-tab-btn" id="tab-auth-register">Crear Cuenta</button>
+                </div>
+
+                <!-- FORMULARIO DE LOGIN -->
+                <form id="form-login" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">Correo Electrónico</label>
+                        <input type="email" id="login-email" placeholder="usuario@correo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">
+                        <i class="fa-solid fa-right-to-bracket"></i> Acceder a la Cuenta
+                    </button>
+                </form>
+
+                <!-- FORMULARIO DE REGISTRO -->
+                <form id="form-register" class="auth-form hidden">
+                    <div class="form-group">
+                        <label for="reg-name">Nombre Completo</label>
+                        <input type="text" id="reg-name" placeholder="Juan Pérez" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email">Correo Electrónico</label>
+                        <input type="email" id="reg-email" placeholder="usuario@correo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Contraseña (Mínimo 6 caracteres)</label>
+                        <input type="password" id="reg-password" minlength="6" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="reg-terms" required checked>
+                        <label for="reg-terms">Confirmo que soy mayor de 18 años y acepto los términos de servicio.</label>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">
+                        <i class="fa-solid fa-user-check"></i> Registrar Cuenta Gratuita
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RECARGA / BILLETERA VIRTUAL -->
     <div class="modal-overlay hidden" id="modal-deposit">
         <div class="modal-card">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-building-columns"></i> Recarga Fiao en la Banca</h3>
+                <h3><i class="fa-solid fa-building-columns"></i> Gestión de Billetera Virtual</h3>
                 <button class="btn-close-modal" id="btn-close-deposit">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Pídele un fiao de cortesía al Banquero para seguir jugando en <strong>Hades House RD</strong>.</p>
+                <p>Solicite una recarga de saldo promocional para su billetera virtual en <strong>Hades House</strong>.</p>
                 <div class="faucet-box">
                     <i class="fa-solid fa-sack-dollar faucet-icon"></i>
                     <span class="faucet-amount">+RD$ 5,000.00</span>
@@ -306,34 +404,34 @@
             </div>
             <div class="modal-footer">
                 <button class="btn-primary full-width" id="btn-claim-faucet">
-                    <i class="fa-solid fa-plus-circle"></i> Dame RD$5,000 de Fiao
+                    <i class="fa-solid fa-plus-circle"></i> Acreditar RD$5,000.00 a mi Cuenta
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- FOOTER SEO & INFO RD -->
+    <!-- FOOTER PROFESIONAL -->
     <footer class="main-footer">
         <div class="footer-container">
             <div class="footer-col">
-                <h4><i class="fa-solid fa-baseball"></i> HADES HOUSE RD 🇩🇴</h4>
-                <p>La banca de apuestas virtual preferida en República Dominicana. Pelota Invernal (LIDOM), MLB, LNB, LDF, Palé de la Suerte y Cash Out instantáneo en pesos dominicanos.</p>
+                <h4><i class="fa-solid fa-trophy"></i> HADES HOUSE RD 🇩🇴</h4>
+                <p>Plataforma profesional de entretenimiento deportivo y cuotas en tiempo real. Cobertura completa de la Liga Dominicana de Béisbol (LIDOM), MLB, LNB y fútbol profesional.</p>
             </div>
             <div class="footer-col">
-                <h4>Navegación de la Banca</h4>
+                <h4>Accesos Rápidos</h4>
                 <ul>
-                    <li><a href="#matches-grid">LIDOM y Grandes Ligas</a></li>
-                    <li><a href="#casino-section">Quinielas y Gallos</a></li>
-                    <li><a href="#sidebar-right">Mi Ticket de Jugada</a></li>
+                    <li><a href="#matches-grid">Cartelera Deportiva</a></li>
+                    <li><a href="#casino-section">Sorteos Especiales</a></li>
+                    <li><a href="#sidebar-right">Gestión de Boletos</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>Juego Responsable RD</h4>
-                <p>🇩🇴 Simulador educativo con dinero virtual RD$. No requiere dinero real de verdad. ¡Disfruta con moderación!</p>
+                <h4>Juego Responsable</h4>
+                <p>🔒 Entorno virtual interactivo de demostración. Moneda simulada RD$ sin valor comercial externo.</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Hades House RD — Orgullosamente Dominicana 🇩🇴 | Desarrollado por HadesVks</p>
+            <p>&copy; 2026 Hades House — Todos los derechos reservados | Desarrollado por HadesVks</p>
         </div>
     </footer>
 

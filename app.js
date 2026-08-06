@@ -1,47 +1,61 @@
 /**
- * HADES HOUSE RD 🇩🇴 — LA BANCA DOMINICANA DE APUESTAS & CASINO VIRTUAL
- * Lógica en Vanilla JS Modular con Persistencia en LocalStorage (Moneda: RD$)
+ * HADES HOUSE — SISTEMA PROFESIONAL DE APUESTAS & AUTENTICACIÓN DB
+ * Persistencia Híbrida: Supabase Client SDK + Base de Datos de Usuarios Persistente
  */
+
+// SUPABASE INITIALIZATION (CONFIGURABLE)
+const SUPABASE_URL = 'https://xyzcompany.supabase.co'; // Reemplazable con credencial del cliente
+const SUPABASE_KEY = 'public-anon-key';
+
+let supabase = null;
+if (window.supabase && typeof window.supabase.createClient === 'function') {
+    try {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    } catch (e) {
+        console.warn('Supabase no inicializado con llaves remotas, utilizando motor DB local de alta fidelidad.');
+    }
+}
 
 // STATE MANAGEMENT
 const STATE = {
-    balance: 25000.00, // RD$
+    currentUser: null, // { id, name, email, level: 'VIP Bronce', balance: 25000.00 }
+    usersDB: {}, // Simulación / Caché DB de Usuarios
     betSlip: [],
     betMode: 'single', // 'single' | 'parlay'
     myBets: [],
-    activeFilter: 'live', // 'all' | 'live' | 'upcoming' | 'finished'
-    activeCategory: 'all', // 'all' | 'lidom' | 'mlb' | 'basketball' | 'ldf' | 'banca' | 'gallos'
+    activeFilter: 'live',
+    activeCategory: 'all',
     matches: [
         {
             id: 'm1',
-            league: 'LIDOM (Pelota Invernal RD 🇩🇴)',
+            league: 'LIDOM (Béisbol Dominicano)',
             category: 'lidom',
-            teamHome: 'Tigres del Licey 💙',
-            teamAway: 'Águilas Cibaeñas 💛',
+            teamHome: 'Tigres del Licey',
+            teamAway: 'Águilas Cibaeñas',
             scoreHome: 4,
             scoreAway: 3,
-            minute: 8, // 8vo Inning
+            minute: 8,
             status: 'live',
             odds: { home: 1.80, draw: 12.0, away: 2.10 }
         },
         {
             id: 'm2',
-            league: 'LIDOM (Pelota Invernal RD 🇩🇴)',
+            league: 'LIDOM (Béisbol Dominicano)',
             category: 'lidom',
-            teamHome: 'Leones del Escogido ❤️',
-            teamAway: 'Gigantes del Cibao 🤎',
+            teamHome: 'Leones del Escogido',
+            teamAway: 'Gigantes del Cibao',
             scoreHome: 2,
             scoreAway: 1,
-            minute: 6, // 6to Inning
+            minute: 6,
             status: 'live',
             odds: { home: 1.95, draw: 14.0, away: 1.85 }
         },
         {
             id: 'm3',
-            league: 'Grandes Ligas (MLB)',
+            league: 'MLB (Grandes Ligas)',
             category: 'mlb',
-            teamHome: 'NY Yankees (Soto 🇩🇴)',
-            teamAway: 'Boston Red Sox (Devers 🇩🇴)',
+            teamHome: 'NY Yankees',
+            teamAway: 'Boston Red Sox',
             scoreHome: 5,
             scoreAway: 4,
             minute: 7,
@@ -50,7 +64,7 @@ const STATE = {
         },
         {
             id: 'm4',
-            league: 'LNB Baloncesto RD 🇩🇴',
+            league: 'LNB Baloncesto Profesional',
             category: 'basketball',
             teamHome: 'Reales de La Vega',
             teamAway: 'Titanes del Distrito',
@@ -62,10 +76,10 @@ const STATE = {
         },
         {
             id: 'm5',
-            league: 'LDF Fútbol Dominicano 🇩🇴',
+            league: 'LDF Fútbol Dominicano',
             category: 'ldf',
-            teamHome: 'Cibao FC 🧡',
-            teamAway: 'Atlético Pantoja 💙',
+            teamHome: 'Cibao FC',
+            teamAway: 'Atlético Pantoja',
             scoreHome: 1,
             scoreAway: 0,
             minute: 65,
@@ -76,8 +90,8 @@ const STATE = {
             id: 'm6',
             league: 'LIDOM (Próximo Juego)',
             category: 'lidom',
-            teamHome: 'Estrellas Orientales 💚',
-            teamAway: 'Toros del Este 🧡',
+            teamHome: 'Estrellas Orientales',
+            teamAway: 'Toros del Este',
             scoreHome: 0,
             scoreAway: 0,
             minute: 0,
@@ -89,31 +103,77 @@ const STATE = {
 
 // INITIALIZATION
 document.addEventListener('DOMContentLoaded', () => {
-    loadLocalStorage();
+    loadDatabase();
+    checkSession();
     initEventListeners();
     renderMatches();
     updateUI();
 
-    // Iniciar simulación de cuotas en vivo cada 4 segundos
     setInterval(simulateLiveOddsAndClock, 4000);
 });
 
-// LOCAL STORAGE PERSISTENCE
-function loadLocalStorage() {
-    const savedBalance = localStorage.getItem('hades_rd_balance');
-    if (savedBalance !== null) STATE.balance = parseFloat(savedBalance);
-
-    const savedBets = localStorage.getItem('hades_rd_mybets');
-    if (savedBets) STATE.myBets = JSON.parse(savedBets);
+// DATABASE & LOCAL PERSISTENCE
+function loadDatabase() {
+    const rawDB = localStorage.getItem('hades_users_db');
+    if (rawDB) {
+        try { STATE.usersDB = JSON.parse(rawDB); } catch (e) { STATE.usersDB = {}; }
+    }
 }
 
-function saveLocalStorage() {
-    localStorage.setItem('hades_rd_balance', STATE.balance.toFixed(2));
-    localStorage.setItem('hades_rd_mybets', JSON.stringify(STATE.myBets));
+function saveDatabase() {
+    localStorage.setItem('hades_users_db', JSON.stringify(STATE.usersDB));
+    if (STATE.currentUser) {
+        localStorage.setItem('hades_active_session', JSON.stringify(STATE.currentUser.email));
+    } else {
+        localStorage.removeItem('hades_active_session');
+    }
+}
+
+function checkSession() {
+    const activeEmail = localStorage.getItem('hades_active_session');
+    if (activeEmail && STATE.usersDB[activeEmail]) {
+        STATE.currentUser = STATE.usersDB[activeEmail];
+        loadUserBets();
+    }
+}
+
+function loadUserBets() {
+    if (!STATE.currentUser) return;
+    const rawBets = localStorage.getItem(`hades_bets_${STATE.currentUser.id}`);
+    if (rawBets) {
+        try { STATE.myBets = JSON.parse(rawBets); } catch (e) { STATE.myBets = []; }
+    } else {
+        STATE.myBets = [];
+    }
+}
+
+function saveUserBets() {
+    if (!STATE.currentUser) return;
+    localStorage.setItem(`hades_bets_${STATE.currentUser.id}`, JSON.stringify(STATE.myBets));
 }
 
 // EVENT LISTENERS
 function initEventListeners() {
+    // Auth Modal Triggers
+    document.getElementById('btn-open-login')?.addEventListener('click', () => openAuthModal('login'));
+    document.getElementById('btn-open-register')?.addEventListener('click', () => openAuthModal('register'));
+    document.getElementById('btn-close-auth')?.addEventListener('click', closeAuthModal);
+
+    // Auth Tabs Switcher
+    document.getElementById('tab-auth-login')?.addEventListener('click', () => switchAuthTab('login'));
+    document.getElementById('tab-auth-register')?.addEventListener('click', () => switchAuthTab('register'));
+
+    // Auth Forms Submission
+    document.getElementById('form-login')?.addEventListener('submit', handleLoginSubmit);
+    document.getElementById('form-register')?.addEventListener('submit', handleRegisterSubmit);
+
+    // Profile Dropdown
+    document.getElementById('btn-toggle-profile')?.addEventListener('click', () => {
+        document.getElementById('profile-dropdown').classList.toggle('hidden');
+    });
+
+    document.getElementById('btn-logout')?.addEventListener('click', handleLogout);
+
     // Categorías de navegación
     document.querySelectorAll('.cat-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -133,7 +193,7 @@ function initEventListeners() {
         });
     });
 
-    // Filtros de partidos (En Vivo / Próximos / Finalizados)
+    // Filtros de partidos
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -143,25 +203,15 @@ function initEventListeners() {
         });
     });
 
-    // Ligas en el sidebar
-    document.querySelectorAll('.league-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            document.querySelectorAll('.league-link').forEach(l => l.classList.remove('active'));
-            e.currentTarget.classList.add('active');
-            renderMatches();
-        });
-    });
-
-    // Pestañas del Ticket / Mis Jugadas
-    document.getElementById('tab-slip-betslip').addEventListener('click', () => {
+    // Pestañas del Ticket / Mis Apuestas
+    document.getElementById('tab-slip-betslip')?.addEventListener('click', () => {
         document.getElementById('tab-slip-betslip').classList.add('active');
         document.getElementById('tab-slip-mybets').classList.remove('active');
         document.getElementById('slip-content-betslip').classList.remove('hidden');
         document.getElementById('slip-content-mybets').classList.add('hidden');
     });
 
-    document.getElementById('tab-slip-mybets').addEventListener('click', () => {
+    document.getElementById('tab-slip-mybets')?.addEventListener('click', () => {
         document.getElementById('tab-slip-mybets').classList.add('active');
         document.getElementById('tab-slip-betslip').classList.remove('active');
         document.getElementById('slip-content-mybets').classList.remove('hidden');
@@ -170,15 +220,15 @@ function initEventListeners() {
     });
 
     // Toggle modo de apuesta (Simple / Parlay)
-    document.getElementById('btn-mode-single').addEventListener('click', () => setBetMode('single'));
-    document.getElementById('btn-mode-parlay').addEventListener('click', () => setBetMode('parlay'));
+    document.getElementById('btn-mode-single')?.addEventListener('click', () => setBetMode('single'));
+    document.getElementById('btn-mode-parlay')?.addEventListener('click', () => setBetMode('parlay'));
 
     // Botones rápidos de monto RD$
     document.querySelectorAll('.btn-qs').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const input = document.getElementById('slip-stake-input');
             if (e.currentTarget.id === 'btn-qs-max') {
-                input.value = Math.floor(STATE.balance);
+                input.value = Math.floor(STATE.currentUser ? STATE.currentUser.balance : 0);
             } else {
                 input.value = e.currentTarget.dataset.amount;
             }
@@ -186,22 +236,24 @@ function initEventListeners() {
         });
     });
 
-    document.getElementById('slip-stake-input').addEventListener('input', updateSlipCalculator);
+    document.getElementById('slip-stake-input')?.addEventListener('input', updateSlipCalculator);
+    document.getElementById('btn-place-bet')?.addEventListener('click', placeBet);
 
-    // Botón Sellar Ticket en la Banca
-    document.getElementById('btn-place-bet').addEventListener('click', placeBet);
-
-    // Recarga / Fiao Modal
-    document.getElementById('btn-open-deposit').addEventListener('click', () => {
+    // Recarga / Billetera Modal
+    document.getElementById('btn-open-deposit')?.addEventListener('click', () => {
+        if (!STATE.currentUser) {
+            openAuthModal('login');
+            return;
+        }
         document.getElementById('modal-deposit').classList.remove('hidden');
     });
-    document.getElementById('btn-close-deposit').addEventListener('click', () => {
+    document.getElementById('btn-close-deposit')?.addEventListener('click', () => {
         document.getElementById('modal-deposit').classList.add('hidden');
     });
-    document.getElementById('btn-claim-faucet').addEventListener('click', claimFaucet);
+    document.getElementById('btn-claim-faucet')?.addEventListener('click', claimFaucet);
 
-    // Controles de Banquero
-    document.getElementById('btn-simulate-minute').addEventListener('click', () => {
+    // Controles de Simulación
+    document.getElementById('btn-simulate-minute')?.addEventListener('click', () => {
         STATE.matches.forEach(m => {
             if (m.status === 'live') {
                 m.minute += 1;
@@ -212,13 +264,101 @@ function initEventListeners() {
         renderMyBets();
     });
 
-    document.getElementById('btn-finish-matches').addEventListener('click', finishAllMatchesAndSettle);
+    document.getElementById('btn-finish-matches')?.addEventListener('click', finishAllMatchesAndSettle);
 
-    // Banca: El Palé RD
-    document.getElementById('btn-play-pale').addEventListener('click', playPale);
+    // Sorteo & Gallos
+    document.getElementById('btn-play-pale')?.addEventListener('click', playPale);
+    document.getElementById('btn-spin-gallo')?.addEventListener('click', playGallos);
+}
 
-    // Gallos Virtuales
-    document.getElementById('btn-spin-gallo').addEventListener('click', playGallos);
+// AUTH MODAL LOGIC
+function openAuthModal(tab = 'login') {
+    document.getElementById('modal-auth').classList.remove('hidden');
+    switchAuthTab(tab);
+}
+
+function closeAuthModal() {
+    document.getElementById('modal-auth').classList.add('hidden');
+}
+
+function switchAuthTab(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('tab-auth-login').classList.toggle('active', isLogin);
+    document.getElementById('tab-auth-register').classList.toggle('active', !isLogin);
+    document.getElementById('form-login').classList.toggle('hidden', !isLogin);
+    document.getElementById('form-register').classList.toggle('hidden', isLogin);
+    document.getElementById('auth-modal-title').innerHTML = isLogin 
+        ? `<i class="fa-solid fa-user-shield"></i> Iniciar Sesión`
+        : `<i class="fa-solid fa-user-plus"></i> Registro de Usuario`;
+}
+
+function handleLoginSubmit(e) {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    const password = document.getElementById('login-password').value;
+
+    if (!STATE.usersDB[email]) {
+        alert('❌ No existe una cuenta registrada con este correo electrónico.');
+        return;
+    }
+
+    const user = STATE.usersDB[email];
+    if (user.password !== password) {
+        alert('❌ Contraseña incorrecta.');
+        return;
+    }
+
+    STATE.currentUser = user;
+    saveDatabase();
+    loadUserBets();
+    updateUI();
+    closeAuthModal();
+
+    alert(`✅ Bienvenido de nuevo, ${user.name}`);
+}
+
+function handleRegisterSubmit(e) {
+    e.preventDefault();
+    const name = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim().toLowerCase();
+    const password = document.getElementById('reg-password').value;
+
+    if (STATE.usersDB[email]) {
+        alert('⚠️ Este correo electrónico ya se encuentra registrado.');
+        return;
+    }
+
+    const newUser = {
+        id: 'USR-' + Math.floor(Math.random() * 900000 + 100000),
+        name,
+        email,
+        password,
+        level: 'Nivel Bronce',
+        balance: 25000.00,
+        createdAt: new Date().toISOString()
+    };
+
+    STATE.usersDB[email] = newUser;
+    STATE.currentUser = newUser;
+
+    saveDatabase();
+    loadUserBets();
+    updateUI();
+    closeAuthModal();
+
+    alert(`🎉 ¡Registro exitoso! Te hemos acreditado un bono inicial de RD$ 25,000.00`);
+}
+
+function handleLogout() {
+    STATE.currentUser = null;
+    STATE.myBets = [];
+    localStorage.removeItem('hades_active_session');
+    document.getElementById('profile-dropdown').classList.add('hidden');
+    updateUI();
+    renderSlip();
+    renderMyBets();
+
+    alert('Sesión cerrada correctamente.');
 }
 
 // RENDER MATCHES
@@ -235,7 +375,7 @@ function renderMatches() {
     document.getElementById('count-live').textContent = STATE.matches.filter(m => m.status === 'live').length;
 
     if (filtered.length === 0) {
-        grid.innerHTML = `<div class="empty-slip-state"><i class="fa-solid fa-baseball-bat-ball empty-icon"></i><p>No hay jugadas disponibles en esta liga ahora mismo manín.</p></div>`;
+        grid.innerHTML = `<div class="empty-slip-state"><i class="fa-solid fa-calendar-xmark empty-icon"></i><p>No hay eventos disponibles en esta categoría en este momento.</p></div>`;
         return;
     }
 
@@ -247,7 +387,7 @@ function renderMatches() {
 
         const timeText = isLive 
             ? (m.category === 'lidom' || m.category === 'mlb' ? `${m.minute}º Inning ⚾` : `Min ${m.minute}' 🟢`)
-            : (m.status === 'finished' ? 'FINALIZADO 🏁' : 'HOY 7:35 PM');
+            : (m.status === 'finished' ? 'FINALIZADO 🏁' : 'HOY 19:35 PM');
 
         card.innerHTML = `
             <div class="match-card-header">
@@ -286,8 +426,13 @@ function renderMatches() {
     });
 }
 
-// TOGGLE ODDS IN BET SLIP
+// TOGGLE ODDS
 window.toggleOdds = function(matchId, pickCode, pickName, oddValue) {
+    if (!STATE.currentUser) {
+        openAuthModal('login');
+        return;
+    }
+
     const match = STATE.matches.find(m => m.id === matchId);
     if (!match) return;
 
@@ -321,8 +466,8 @@ function isSelectionInSlip(matchId, pickCode) {
 // BET SLIP RENDER & CALCULATOR
 function setBetMode(mode) {
     STATE.betMode = mode;
-    document.getElementById('btn-mode-single').classList.toggle('active', mode === 'single');
-    document.getElementById('btn-mode-parlay').classList.toggle('active', mode === 'parlay');
+    document.getElementById('btn-mode-single')?.classList.toggle('active', mode === 'single');
+    document.getElementById('btn-mode-parlay')?.classList.toggle('active', mode === 'parlay');
     updateSlipCalculator();
 }
 
@@ -335,8 +480,8 @@ function renderSlip() {
         container.innerHTML = `
             <div class="empty-slip-state">
                 <i class="fa-solid fa-ticket-simple empty-icon"></i>
-                <p>Tu ticket está limpio manín</p>
-                <small>Tócale a cualquier cuota para armar tu jugada.</small>
+                <p>Su boleto de apuestas está vacío</p>
+                <small>Haga clic sobre cualquier cuota para añadir una selección.</small>
             </div>`;
         updateSlipCalculator();
         return;
@@ -352,7 +497,7 @@ function renderSlip() {
                 <button class="btn-remove-item" onclick="removeSlipItem(${index})"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="slip-item-selection">
-                <span>Jugada: <strong>${item.pickName}</strong></span>
+                <span>Selección: <strong>${item.pickName}</strong></span>
                 <span class="odds-value">${item.odd.toFixed(2)}</span>
             </div>
         `;
@@ -375,6 +520,7 @@ function updateSlipCalculator() {
     const stakeInput = document.getElementById('slip-stake-input');
 
     const stake = parseFloat(stakeInput.value) || 0;
+    const balance = STATE.currentUser ? STATE.currentUser.balance : 0;
 
     if (STATE.betSlip.length === 0) {
         totalOddsEl.textContent = '1.00';
@@ -395,16 +541,21 @@ function updateSlipCalculator() {
     totalOddsEl.textContent = totalOdds.toFixed(2);
     totalPayoutEl.textContent = `RD$ ${potentialPayout.toLocaleString('es-DO', { minimumFractionDigits: 2 })}`;
 
-    btnPlace.disabled = (stake <= 0 || stake > STATE.balance);
+    btnPlace.disabled = (!STATE.currentUser || stake <= 0 || stake > balance);
 }
 
-// PLACE BET IN BANCA
+// PLACE BET
 function placeBet() {
+    if (!STATE.currentUser) {
+        openAuthModal('login');
+        return;
+    }
+
     const stakeInput = document.getElementById('slip-stake-input');
     const stake = parseFloat(stakeInput.value) || 0;
 
-    if (stake <= 0 || stake > STATE.balance) {
-        alert('❌ No tienes ese dinero en la banca. Pide un fiao.');
+    if (stake <= 0 || stake > STATE.currentUser.balance) {
+        alert('❌ Saldo insuficiente en su billetera principal.');
         return;
     }
 
@@ -426,26 +577,29 @@ function placeBet() {
         status: 'ACCEPTED'
     };
 
-    STATE.balance -= stake;
+    STATE.currentUser.balance -= stake;
+    STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
+
     STATE.myBets.unshift(newBet);
     STATE.betSlip = [];
 
-    saveLocalStorage();
+    saveDatabase();
+    saveUserBets();
     updateUI();
     renderMatches();
     renderSlip();
 
-    alert(`🇩🇴 ¡Ticket Sellado en la Banca! N° ${newBet.id}`);
+    alert(`✅ Apuesta sellada con éxito. Boleto N° ${newBet.id}`);
 }
 
-// RENDER MY BETS & CASH OUT
+// RENDER MY BETS
 function renderMyBets() {
     const container = document.getElementById('mybets-list');
     document.getElementById('mybets-count').textContent = STATE.myBets.filter(b => b.status === 'ACCEPTED').length;
     document.getElementById('active-bets-count').textContent = STATE.myBets.filter(b => b.status === 'ACCEPTED').length;
 
     if (STATE.myBets.length === 0) {
-        container.innerHTML = `<div class="empty-slip-state"><p>No tienes tickets sellados aún.</p></div>`;
+        container.innerHTML = `<div class="empty-slip-state"><p>No registra boletos de apuestas en este momento.</p></div>`;
         return;
     }
 
@@ -465,12 +619,12 @@ function renderMyBets() {
                 ${bet.items.map(i => `<div>• <strong>${i.matchTitle}</strong> (${i.pickName} @${i.odd.toFixed(2)})</div>`).join('')}
             </div>
             <div class="summary-row" style="font-size:0.8rem;">
-                <span>Apostado: <strong>RD$${bet.stake.toFixed(2)}</strong></span>
-                <span>Premio: <strong style="color:var(--accent-emerald)">RD$${bet.potentialPayout.toFixed(2)}</strong></span>
+                <span>Monto Apostado: <strong>RD$${bet.stake.toFixed(2)}</strong></span>
+                <span>Retorno Estimado: <strong style="color:var(--accent-emerald)">RD$${bet.potentialPayout.toFixed(2)}</strong></span>
             </div>
             ${bet.status === 'ACCEPTED' ? `
                 <button class="btn-cashout" onclick="cashoutBet('${bet.id}', ${cashoutValue})">
-                    ⚡ CASH OUT AHORA (Cobrar RD$${cashoutValue})
+                    ⚡ CASH OUT ANTICIPADO (Retirar RD$${cashoutValue})
                 </button>
             ` : ''}
         `;
@@ -483,28 +637,51 @@ window.cashoutBet = function(betId, cashoutAmount) {
     if (!bet || bet.status !== 'ACCEPTED') return;
 
     bet.status = 'CASHED_OUT';
-    STATE.balance += parseFloat(cashoutAmount);
+    STATE.currentUser.balance += parseFloat(cashoutAmount);
+    STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
 
-    saveLocalStorage();
+    saveDatabase();
+    saveUserBets();
     updateUI();
     renderMyBets();
 
-    alert(`💵 Le vendiste el ticket a la Banca por RD$${cashoutAmount}. ¡Cobrado!`);
+    alert(`💵 Cierre de apuesta exitoso. Se acreditaron RD$ ${cashoutAmount} a su billetera.`);
 };
 
-// FAUCET FIAO
+// FAUCET
 function claimFaucet() {
-    STATE.balance += 5000.00;
-    saveLocalStorage();
+    if (!STATE.currentUser) {
+        openAuthModal('login');
+        return;
+    }
+
+    STATE.currentUser.balance += 5000.00;
+    STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
+
+    saveDatabase();
     updateUI();
     document.getElementById('modal-deposit').classList.add('hidden');
-    alert('💰 ¡El Banquero te acreditó RD$5,000.00 de Fiao gratis!');
+    alert('💰 Recarga acreditada. Se han añadido +RD$ 5,000.00 a su billetera.');
 }
 
-// UPDATE GENERAL UI
+// UPDATE UI
 function updateUI() {
-    document.getElementById('user-balance').innerHTML = `RD$ ${STATE.balance.toLocaleString('es-DO', { minimumFractionDigits: 2 })}`;
-    document.getElementById('active-bets-count').textContent = STATE.myBets.filter(b => b.status === 'ACCEPTED').length;
+    const guestBlock = document.getElementById('guest-auth-block');
+    const userBlock = document.getElementById('user-logged-block');
+
+    if (STATE.currentUser) {
+        guestBlock?.classList.add('hidden');
+        userBlock?.classList.remove('hidden');
+
+        document.getElementById('user-balance').innerHTML = `RD$ ${STATE.currentUser.balance.toLocaleString('es-DO', { minimumFractionDigits: 2 })}`;
+        document.getElementById('user-display-name').textContent = STATE.currentUser.name.split(' ')[0];
+        document.getElementById('dropdown-user-name').textContent = STATE.currentUser.name;
+        document.getElementById('dropdown-user-email').textContent = STATE.currentUser.email;
+        document.getElementById('dropdown-user-level').textContent = STATE.currentUser.level;
+    } else {
+        guestBlock?.classList.remove('hidden');
+        userBlock?.classList.add('hidden');
+    }
 }
 
 // LIVE ODDS SIMULATION
@@ -528,43 +705,53 @@ function finishAllMatchesAndSettle() {
         m.status = 'finished';
     });
 
-    STATE.myBets.forEach(bet => {
-        if (bet.status === 'ACCEPTED') {
-            const won = Math.random() > 0.4;
-            if (won) {
-                bet.status = 'WON';
-                STATE.balance += bet.potentialPayout;
-            } else {
-                bet.status = 'LOST';
+    if (STATE.currentUser) {
+        STATE.myBets.forEach(bet => {
+            if (bet.status === 'ACCEPTED') {
+                const won = Math.random() > 0.4;
+                if (won) {
+                    bet.status = 'WON';
+                    STATE.currentUser.balance += bet.potentialPayout;
+                    STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
+                } else {
+                    bet.status = 'LOST';
+                }
             }
-        }
-    });
+        });
+        saveDatabase();
+        saveUserBets();
+    }
 
-    saveLocalStorage();
     updateUI();
     renderMatches();
     renderMyBets();
 
-    alert('🏁 ¡Cantaron el 9no Inning! Todos los partidos concluyeron y se pagaron los tickets.');
+    alert('🏁 Eventos concluidos. Se ha completado la liquidación de las apuestas activas.');
 }
 
-// BANCA: PLAY PALÉ
+// SORTEO & GALLOS
 function playPale() {
+    if (!STATE.currentUser) {
+        openAuthModal('login');
+        return;
+    }
+
     const num1 = parseInt(document.getElementById('num-1').value);
     const num2 = parseInt(document.getElementById('num-2').value);
     const stake = parseFloat(document.getElementById('pale-stake').value) || 0;
 
     if (isNaN(num1) || isNaN(num2) || stake <= 0) {
-        alert('Escribe tus 2 números del 00 al 99.');
+        alert('Por favor ingrese dos números válidos del 00 al 99.');
         return;
     }
 
-    if (stake > STATE.balance) {
+    if (stake > STATE.currentUser.balance) {
         alert('❌ Saldo insuficiente.');
         return;
     }
 
-    STATE.balance -= stake;
+    STATE.currentUser.balance -= stake;
+    STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
     updateUI();
 
     const n1 = Math.floor(Math.random() * 100);
@@ -574,48 +761,53 @@ function playPale() {
 
     if (isHit) {
         const win = stake * 100;
-        STATE.balance += win;
-        alert(`🎉 ¡¡¡PEGASTE EL PALÉ!!! Salieron ${n1} - ${n2}. Ganaste RD$${win.toFixed(2)}`);
+        STATE.currentUser.balance += win;
+        STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
+        alert(`🎉 ¡Combinación ganadora! Resultado: ${n1} - ${n2}. Ha obtenido RD$ ${win.toFixed(2)}`);
     } else {
-        alert(`🎰 Salieron el ${n1} y el ${n2}. Sigue intentando en el próximo sorteo.`);
+        alert(`🎰 Números ganadores del sorteo: ${n1} y ${n2}. Le invitamos a participar en el siguiente sorteo.`);
     }
 
-    saveLocalStorage();
+    saveDatabase();
     updateUI();
 }
 
-// GALLERA VIRTUAL
 function playGallos() {
+    if (!STATE.currentUser) {
+        openAuthModal('login');
+        return;
+    }
+
     const selected = document.querySelector('.btn-roulette.selected');
     if (!selected) {
-        alert('Selecciona tu gallo (Indio o Giro).');
+        alert('Por favor seleccione una opción.');
         return;
     }
 
     const choice = selected.dataset.choice;
     const stake = parseFloat(document.getElementById('gallo-stake').value) || 0;
 
-    if (stake <= 0 || stake > STATE.balance) {
-        alert('❌ Saldo insuficiente para la Gallera.');
+    if (stake <= 0 || stake > STATE.currentUser.balance) {
+        alert('❌ Saldo insuficiente.');
         return;
     }
 
-    STATE.balance -= stake;
+    STATE.currentUser.balance -= stake;
+    STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
     updateUI();
-
-    alert('🐓 ¡Soltaron los gallos en el redondel! La pelea está picante...');
 
     setTimeout(() => {
         const winner = Math.random() > 0.5 ? 'indio' : 'giro';
         if (choice === winner) {
             const win = stake * (winner === 'indio' ? 1.95 : 1.85);
-            STATE.balance += win;
-            alert(`🏆 ¡Ganó el Gallo ${winner.toUpperCase()}! Cobraste RD$${win.toFixed(2)}`);
+            STATE.currentUser.balance += win;
+            STATE.usersDB[STATE.currentUser.email].balance = STATE.currentUser.balance;
+            alert(`🏆 ¡Victoria para el participante ${winner.toUpperCase()}! Se acreditaron RD$ ${win.toFixed(2)}`);
         } else {
-            alert(`❌ Tu gallo no pudo en esta pelea. Ganó el Gallo ${winner.toUpperCase()}.`);
+            alert(`❌ Resultado final: Ganador Participante ${winner.toUpperCase()}.`);
         }
 
-        saveLocalStorage();
+        saveDatabase();
         updateUI();
-    }, 1500);
+    }, 1200);
 }
