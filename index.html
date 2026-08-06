@@ -35,9 +35,6 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Supabase Client SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -49,43 +46,31 @@
     <!-- NAVBAR HEADER OFICIAL -->
     <header class="main-header" id="main-header">
         <div class="header-container">
-            
-            <!-- LOGO REAL CON IMAGEN DE MARCA -->
-            <div class="logo-brand" id="logo-brand">
+            <a href="index.html" class="logo-brand" id="logo-brand">
                 <img src="logo.jpg" alt="Hades House Logo" class="brand-logo-img">
                 <div class="logo-text-group">
                     <span class="logo-text">HADES <span class="accent-text">HOUSE</span></span>
                     <span class="logo-subtext">SPORTSBOOK & CASINO</span>
                 </div>
                 <span class="badge-official">OFICIAL RD 🇩🇴</span>
-            </div>
+            </a>
 
-            <!-- NAVEGACIÓN PRINCIPAL DE CATEGORÍAS -->
             <nav class="nav-categories" id="nav-categories">
-                <button class="cat-btn active" data-category="all" id="cat-btn-all">
+                <a href="index.html" class="cat-btn active" data-category="all" id="cat-btn-all">
                     <i class="fa-solid fa-layer-group"></i> Todos los Deportes
-                </button>
-                <button class="cat-btn" data-category="lidom" id="cat-btn-lidom">
-                    <i class="fa-solid fa-baseball"></i> LIDOM (Pelota RD)
-                </button>
-                <button class="cat-btn" data-category="mlb" id="cat-btn-mlb">
-                    <i class="fa-solid fa-baseball-bat-ball"></i> MLB
-                </button>
-                <button class="cat-btn" data-category="football" id="cat-btn-football">
-                    <i class="fa-solid fa-futbol"></i> Fútbol Internacional
-                </button>
-                <button class="cat-btn" data-category="basketball" id="cat-btn-basketball">
-                    <i class="fa-solid fa-basketball"></i> NBA
-                </button>
-                <button class="cat-btn highlight-casino" data-category="banca" id="cat-btn-banca">
-                    <i class="fa-solid fa-dice-five"></i> Sorteos & Palé
-                </button>
+                </a>
+                <a href="sorteos.html" class="cat-btn" data-category="banca" id="cat-btn-banca">
+                    <i class="fa-solid fa-ticket"></i> Sorteos & Palé
+                </a>
+                <a href="casino.html" class="cat-btn highlight-casino">
+                    <i class="fa-solid fa-dice"></i> Casino Virtual
+                </a>
+                <a href="billetera.html" class="cat-btn">
+                    <i class="fa-solid fa-wallet"></i> Billetera Real
+                </a>
             </nav>
 
-            <!-- BILLETERA & USUARIO -->
             <div class="wallet-widget" id="wallet-widget">
-                
-                <!-- ESTADO INVITADO -->
                 <div class="auth-buttons-guest" id="guest-auth-block">
                     <button class="btn-secondary-header" id="btn-open-login">
                         <i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión
@@ -95,7 +80,6 @@
                     </button>
                 </div>
 
-                <!-- ESTADO REGISTRADO -->
                 <div class="user-logged-block hidden" id="user-logged-block">
                     <div class="balance-display">
                         <span class="balance-label">BILLETERA OFICIAL</span>
@@ -105,7 +89,6 @@
                         <i class="fa-solid fa-wallet"></i> Depósitos / Retiros
                     </button>
 
-                    <!-- Profile Dropdown Menu -->
                     <div class="profile-menu-wrapper">
                         <button class="btn-profile" id="btn-toggle-profile">
                             <i class="fa-solid fa-circle-user"></i>
@@ -116,57 +99,30 @@
                             <div class="dropdown-header">
                                 <strong id="dropdown-user-name">Nombre</strong>
                                 <small id="dropdown-user-email">email@ejemplo.com</small>
-                                <span class="badge-vip" id="dropdown-user-level">Miembro VIP</span>
                             </div>
                             <hr class="dropdown-divider">
-                            <button class="dropdown-item" id="btn-show-history">
-                                <i class="fa-solid fa-clock-rotate-left"></i> Historial de Apuestas
-                            </button>
                             <button class="dropdown-item danger" id="btn-logout">
                                 <i class="fa-solid fa-power-off"></i> Cerrar Sesión
                             </button>
                         </div>
                     </div>
-
-                    <button class="btn-icon" id="btn-toggle-my-bets" title="Mis Boletos">
-                        <i class="fa-solid fa-receipt"></i>
-                        <span class="badge-counter" id="active-bets-count">0</span>
-                    </button>
                 </div>
-
             </div>
         </div>
     </header>
 
-    <!-- BANNER DE PROMOCIÓN DE BIENVENIDA -->
+    <!-- BANNER HERO PROMO -->
     <section class="promo-banner-hero">
         <div class="promo-banner-content">
             <div class="promo-badge-tag"><i class="fa-solid fa-gift"></i> OFERTA DE BIENVENIDA</div>
             <h2>Bono del 100% en tu Primer Depósito hasta <strong>RD$ 10,000.00</strong></h2>
-            <p>Duplica tu saldo inicial al registrarte hoy en Hades House. Código promocional: <strong>HADES100</strong></p>
+            <p>Duplica tu saldo inicial al registrarte hoy en Hades House.</p>
         </div>
         <button class="btn-hero-claim" id="btn-claim-welcome-bonus">Reclamar Bono Ahora</button>
     </section>
 
-    <!-- TICKER EN VIVO -->
-    <section class="hero-ticker-section">
-        <div class="ticker-content">
-            <div class="ticker-item">
-                <span class="ticker-pulse"></span> ⚾ <strong>LIDOM EN DIRECTO:</strong> Tigres del Licey vs Águilas Cibaeñas — Octavo Inning en Vivo
-            </div>
-            <div class="ticker-item">
-                💳 <strong>PASARELAS DISPONIBLES:</strong> Tarjetas de Crédito/Débito, Transferencia Bancaria RD y USDT Cripto.
-            </div>
-            <div class="ticker-item">
-                ⚡ <strong>CASH OUT ANTICIPADO:</strong> Cobra el retorno de tu boleto antes de finalizar el evento.
-            </div>
-        </div>
-    </section>
-
     <!-- MAIN APP CONTAINER -->
     <main class="app-layout" id="app-layout">
-        
-        <!-- SIDEBAR DEPORTE / FILTROS -->
         <aside class="sidebar-left" id="sidebar-left">
             <div class="sidebar-block">
                 <h3 class="sidebar-title"><i class="fa-solid fa-trophy"></i> Competiciones Principales</h3>
@@ -178,110 +134,36 @@
                     <li><a href="#" class="league-link" data-league="basketball"><i class="fa-solid fa-basketball"></i> NBA League</a></li>
                 </ul>
             </div>
-
-            <!-- PROMO CARD -->
-            <div class="sidebar-block promo-card-rd">
-                <i class="fa-solid fa-crown promo-icon"></i>
-                <h4>Combinada con Supercuota</h4>
-                <p>Combina 3 selecciones deportivas y multiplica tu premio un +25% adicional.</p>
-                <button class="btn-secondary-sm" id="btn-quick-parlay">Armar Parlay Oficial</button>
-            </div>
         </aside>
 
-        <!-- MAIN CONTENT (MATCHES & LIVE CHAT) -->
         <section class="main-content" id="main-content">
-
-            <!-- MATCH TRACKER 2D -->
-            <div class="match-tracker-container" id="match-tracker-container">
-                <div class="tracker-header">
-                    <span class="badge-live-tracker">🔴 MATCH TRACKER & ESTADÍSTICAS OFICIALES</span>
-                    <h3 id="tracker-title">Tigres del Licey vs Águilas Cibaeñas</h3>
-                </div>
-                <div class="tracker-body">
-                    <div class="pitch-2d" id="pitch-2d">
-                        <div class="pitch-event-text" id="pitch-event-text">⚾ ¡Batazo profundo al jardín central! Licey amenaza con hombres en base.</div>
-                    </div>
-                    <div class="tracker-stats-chart">
-                        <canvas id="liveStatsChart" height="110"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION HEADER -->
             <div class="section-header">
                 <div class="section-title-wrap">
-                    <h1 class="page-title" id="page-title">Cartelera Deportiva & Cuotas Oficiales</h1>
+                    <h1 class="page-title">Cartelera Deportiva & Cuotas Oficiales</h1>
                     <span class="live-indicator"><i class="fa-solid fa-circle blink"></i> EN TIEMPO REAL</span>
                 </div>
-                <div class="filter-tabs">
-                    <button class="tab-btn active" data-filter="live" id="tab-filter-live">En Directo (<span id="count-live">0</span>)</button>
-                    <button class="tab-btn" data-filter="upcoming" id="tab-filter-upcoming">Próximos</button>
-                    <button class="tab-btn" data-filter="finished" id="tab-filter-finished">Finalizados</button>
-                </div>
             </div>
 
-            <!-- MATCHES GRID CONTAINER -->
-            <div class="matches-grid" id="matches-grid">
-                <!-- Se puebla dinámicamente desde JavaScript -->
-            </div>
+            <div class="matches-grid" id="matches-grid"></div>
 
-            <!-- MÓDULO DE COMENTARIOS EN VIVO -->
             <div class="live-comments-section" id="live-comments-section">
                 <div class="section-header">
-                    <h2 class="page-title"><i class="fa-solid fa-comments"></i> Comunidad & Comentarios Oficiales</h2>
+                    <h2 class="page-title"><i class="fa-solid fa-comments"></i> Comunidad & Comentarios</h2>
                 </div>
                 <div class="comments-box-wrapper">
                     <div class="comments-list" id="comments-list"></div>
                     <div class="comments-input-bar">
-                        <input type="text" id="input-comment" placeholder="Escribe tu opinión sobre los eventos en tiempo real..." maxlength="140">
-                        <button class="btn-primary" id="btn-send-comment">
-                            <i class="fa-solid fa-paper-plane"></i> Enviar
-                        </button>
+                        <input type="text" id="input-comment" placeholder="Escribe tu opinión..." maxlength="140">
+                        <button class="btn-primary" id="btn-send-comment">Enviar</button>
                     </div>
                 </div>
             </div>
-
-            <!-- BANCA & SORTEOS SECTION -->
-            <div class="casino-section hidden" id="casino-section">
-                <div class="section-header">
-                    <h2 class="page-title"><i class="fa-solid fa-dice"></i> Sorteos & Quinielas de la Banca</h2>
-                </div>
-
-                <div class="casino-grid">
-                    <div class="casino-card" id="pale-card">
-                        <div class="casino-card-header">
-                            <h3><i class="fa-solid fa-ticket"></i> Sorteo Oficial de Quinielas & Palé</h3>
-                            <span class="badge-hot">PREMIO 100X</span>
-                        </div>
-                        <div class="pale-box">
-                            <p>Selecciona dos números (00 al 99):</p>
-                            <div class="pale-inputs">
-                                <input type="number" id="num-1" min="0" max="99" placeholder="00">
-                                <span class="plus-sign">+</span>
-                                <input type="number" id="num-2" min="0" max="99" placeholder="77">
-                            </div>
-                            <div class="input-group" style="margin-top:12px;">
-                                <label for="pale-stake">Monto de la Apuesta (RD$)</label>
-                                <input type="number" id="pale-stake" value="100" min="10">
-                            </div>
-                            <button class="btn-primary full-width" id="btn-play-pale" style="margin-top:12px;">
-                                Confirmar Palé Oficial
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </section>
 
-        <!-- RIGHT SLIP / MY BETS PANEL -->
         <aside class="sidebar-right" id="sidebar-right">
             <div class="slip-tabs">
                 <button class="slip-tab active" id="tab-slip-betslip">
                     <i class="fa-solid fa-receipt"></i> Boleto (<span id="slip-count">0</span>)
-                </button>
-                <button class="slip-tab" id="tab-slip-mybets">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Mis Boletos (<span id="mybets-count">0</span>)
                 </button>
             </div>
 
@@ -292,10 +174,8 @@
                 </div>
 
                 <div class="slip-items-container" id="slip-items-container">
-                    <div class="empty-slip-state" id="empty-slip-state">
-                        <i class="fa-solid fa-ticket-simple empty-icon"></i>
+                    <div class="empty-slip-state">
                         <p>Su boleto de apuestas está vacío</p>
-                        <small>Haga clic sobre cualquier cuota para añadir una selección.</small>
                     </div>
                 </div>
 
@@ -307,17 +187,7 @@
 
                     <div class="stake-input-group">
                         <label for="slip-stake-input">Monto a Apostar (RD$):</label>
-                        <div class="stake-input-wrapper">
-                            <input type="number" id="slip-stake-input" value="100" min="10" step="50">
-                        </div>
-                    </div>
-
-                    <div class="quick-stake-buttons">
-                        <button class="btn-qs" data-amount="50">RD$50</button>
-                        <button class="btn-qs" data-amount="100">RD$100</button>
-                        <button class="btn-qs" data-amount="500">RD$500</button>
-                        <button class="btn-qs" data-amount="1000">RD$1K</button>
-                        <button class="btn-qs" id="btn-qs-max">SALDO MÁXIMO</button>
+                        <input type="number" id="slip-stake-input" value="100" min="10" step="50">
                     </div>
 
                     <div class="summary-row payout-row">
@@ -330,12 +200,7 @@
                     </button>
                 </div>
             </div>
-
-            <div class="slip-content hidden" id="slip-content-mybets">
-                <div class="mybets-list" id="mybets-list"></div>
-            </div>
         </aside>
-
     </main>
 
     <!-- MODAL PASARELA DE PAGOS REAL -->
@@ -346,92 +211,47 @@
                 <button class="btn-close-modal" id="btn-close-deposit">&times;</button>
             </div>
             <div class="modal-body">
-                
                 <div class="payment-tabs-switcher">
-                    <button class="payment-tab-btn active" id="tab-pay-deposit">
-                        <i class="fa-solid fa-arrow-down-left-and-arrow-up-right"></i> Depositar Fondos
-                    </button>
-                    <button class="payment-tab-btn" id="tab-pay-withdraw">
-                        <i class="fa-solid fa-hand-holding-dollar"></i> Retirar Ganancias
-                    </button>
+                    <button class="payment-tab-btn active" id="tab-pay-deposit">Depositar Fondos</button>
+                    <button class="payment-tab-btn" id="tab-pay-withdraw">Retirar Ganancias</button>
                 </div>
 
                 <div class="payment-section-content" id="section-pay-deposit">
                     <div class="payment-method-selector">
-                        <label>Seleccione el Método de Pago:</label>
                         <div class="methods-grid">
-                            <button class="method-btn active" data-method="card">
-                                <i class="fa-solid fa-credit-card"></i> Tarjeta RD$
-                            </button>
-                            <button class="method-btn" data-method="bank">
-                                <i class="fa-solid fa-building-columns"></i> Banco RD
-                            </button>
-                            <button class="method-btn" data-method="crypto">
-                                <i class="fa-brands fa-bitcoin"></i> USDT Cripto
-                            </button>
+                            <button class="method-btn active" data-method="card">Tarjeta RD$</button>
+                            <button class="method-btn" data-method="bank">Banco RD</button>
+                            <button class="method-btn" data-method="crypto">USDT Cripto</button>
                         </div>
                     </div>
 
                     <form id="form-deposit-card" class="payment-subform">
                         <div class="form-group">
                             <label>Monto a Depositar (RD$)</label>
-                            <input type="number" id="dep-card-amount" value="1000" min="100" step="100" required>
+                            <input type="number" id="dep-card-amount" value="1000" min="100" required>
                         </div>
-                        <div class="form-group">
-                            <label>Número de Tarjeta</label>
-                            <input type="text" id="dep-card-number" placeholder="4532 •••• •••• 8892" maxlength="19" required>
-                        </div>
-                        <div class="form-row-2">
-                            <div class="form-group">
-                                <label>Vencimiento</label>
-                                <input type="text" placeholder="MM/AA" maxlength="5" required>
-                            </div>
-                            <div class="form-group">
-                                <label>CVV</label>
-                                <input type="password" placeholder="123" maxlength="4" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-primary full-width margin-top-12">
-                            <i class="fa-solid fa-lock"></i> Procesar Depósito Seguro
-                        </button>
+                        <button type="submit" class="btn-primary full-width margin-top-12">Procesar Depósito Seguro</button>
                     </form>
 
                     <form id="form-deposit-bank" class="payment-subform hidden">
-                        <div class="bank-details-box">
-                            <p><strong>Cuentas Bancarias Autorizadas:</strong></p>
-                            <small>• <strong>Banco Popular:</strong> 792019284 (Hades House SRL)</small><br>
-                            <small>• <strong>Banreservas:</strong> 960192837 (Hades House SRL)</small>
-                        </div>
                         <div class="form-group">
                             <label>Monto Transferido (RD$)</label>
                             <input type="number" id="dep-bank-amount" value="2000" min="500" required>
                         </div>
                         <div class="form-group">
-                            <label>Número de Confirmación Bancaria</label>
+                            <label>Número de Confirmación</label>
                             <input type="text" id="dep-bank-ref" placeholder="Ej: REF-99201827" required>
                         </div>
-                        <button type="submit" class="btn-primary full-width margin-top-12">
-                            <i class="fa-solid fa-file-invoice-dollar"></i> Validar Transferencia Bancaria
-                        </button>
+                        <button type="submit" class="btn-primary full-width margin-top-12">Validar Transferencia</button>
                     </form>
 
                     <form id="form-deposit-crypto" class="payment-subform hidden">
-                        <div class="crypto-qr-box">
-                            <div class="qr-placeholder">
-                                <i class="fa-solid fa-qrcode qr-icon"></i>
-                            </div>
-                            <p class="crypto-addr-label">Enviar USDT (Red TRC-20):</p>
-                            <code class="crypto-address" id="crypto-address-text">TXh8Jk29LpQzM902WxE91KsA88Z7k</code>
-                        </div>
                         <div class="form-group">
-                            <label>Hash de Transacción / TXID</label>
-                            <input type="text" id="dep-crypto-txid" placeholder="Paste TXID Hash..." required>
+                            <label>Hash TXID</label>
+                            <input type="text" id="dep-crypto-txid" placeholder="Paste Hash TXID..." required>
                         </div>
-                        <button type="submit" class="btn-primary full-width margin-top-12">
-                            <i class="fa-solid fa-bolt"></i> Verificar Transacción Cripto
-                        </button>
+                        <button type="submit" class="btn-primary full-width margin-top-12">Verificar Cripto</button>
                     </form>
-
                 </div>
 
                 <div class="payment-section-content hidden" id="section-pay-withdraw">
@@ -441,33 +261,17 @@
                             <input type="number" id="with-amount" value="1000" min="500" required>
                         </div>
                         <div class="form-group">
-                            <label>Método de Retiro</label>
-                            <select id="with-method-select" class="form-select">
-                                <option value="bank_popular">Banco Popular Dominicano</option>
-                                <option value="bank_banreservas">Banreservas</option>
-                                <option value="bank_bhd">Banco BHD</option>
-                                <option value="usdt_trc20">USDT Cripto (TRC-20)</option>
-                            </select>
+                            <label>Número de Cuenta</label>
+                            <input type="text" id="with-account-number" placeholder="Ej: 801928374" required>
                         </div>
-                        <div class="form-group">
-                            <label>Número de Cuenta o Dirección Billetera</label>
-                            <input type="text" id="with-account-number" placeholder="Ej: 801928374 o TXh8..." required>
-                        </div>
-                        <div class="form-group">
-                            <label>Nombre Completo del Titular</label>
-                            <input type="text" id="with-holder-name" placeholder="Nombre del titular" required>
-                        </div>
-                        <button type="submit" class="btn-primary full-width margin-top-12">
-                            <i class="fa-solid fa-hand-holding-dollar"></i> Solicitar Retiro de Ganancias
-                        </button>
+                        <button type="submit" class="btn-primary full-width margin-top-12">Solicitar Retiro</button>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>
 
-    <!-- MODAL AUTENTICACIÓN -->
+    <!-- MODAL AUTH -->
     <div class="modal-overlay hidden" id="modal-auth">
         <div class="modal-card modal-auth-card">
             <div class="modal-header">
@@ -488,9 +292,7 @@
                         <label for="login-password">Contraseña</label>
                         <input type="password" id="login-password" placeholder="••••••••" required>
                     </div>
-                    <button type="submit" class="btn-primary full-width">
-                        <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
-                    </button>
+                    <button type="submit" class="btn-primary full-width">Iniciar Sesión</button>
                 </form>
                 <form id="form-register" class="auth-form hidden">
                     <div class="form-group">
@@ -502,54 +304,26 @@
                         <input type="email" id="reg-email" placeholder="usuario@correo.com" required>
                     </div>
                     <div class="form-group">
-                        <label for="reg-password">Contraseña (Mínimo 6 caracteres)</label>
+                        <label for="reg-password">Contraseña</label>
                         <input type="password" id="reg-password" minlength="6" placeholder="••••••••" required>
                     </div>
-                    <div class="form-checkbox">
-                        <input type="checkbox" id="reg-terms" required checked>
-                        <label for="reg-terms">Confirmo que soy mayor de 18 años y acepto los términos de servicio.</label>
-                    </div>
-                    <button type="submit" class="btn-primary full-width">
-                        <i class="fa-solid fa-user-check"></i> Registrar Cuenta
-                    </button>
+                    <button type="submit" class="btn-primary full-width">Registrar Cuenta</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- FOOTER OFICIAL CON CERTIFICACIÓN -->
+    <!-- FOOTER -->
     <footer class="main-footer">
         <div class="footer-container">
             <div class="footer-col">
-                <div class="footer-brand-wrap">
-                    <img src="logo.jpg" alt="Hades House Logo" class="footer-logo-img">
-                    <h4>HADES HOUSE SRL 🇩🇴</h4>
-                </div>
-                <p>Plataforma oficial de entretenimiento deportivo y casino en línea. Operador regulado con cobertura de la Liga Dominicana de Béisbol (LIDOM), MLB, Champions League y NBA.</p>
+                <h4>HADES HOUSE SRL 🇩🇴</h4>
+                <p>Plataforma oficial de entretenimiento deportivo. Cobertura de la LIDOM, MLB, Champions League y NBA.</p>
             </div>
-            <div class="footer-col">
-                <h4>Navegación Oficial</h4>
-                <ul>
-                    <li><a href="#matches-grid">Cartelera Deportiva</a></li>
-                    <li><a href="#live-comments-section">Comunidad Oficial</a></li>
-                    <li><a href="#sidebar-right">Boleto de Apuestas</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Juego Responsable & Seguridad</h4>
-                <div class="footer-seals">
-                    <span class="seal-badge">18+</span>
-                    <span class="seal-badge"><i class="fa-solid fa-lock"></i> SSL 256-BIT</span>
-                </div>
-                <p style="margin-top:8px;">🔒 Plataforma oficial. Mantenga el control y juegue con responsabilidad.</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Hades House SRL — Todos los derechos reservados | Licencia Oficial iGaming 🇩🇴</p>
         </div>
     </footer>
 
-    <!-- App Logic JavaScript -->
-    <script src="app.js"></script>
+    <!-- App Logic JavaScript cargado con DEFER -->
+    <script src="app.js" defer></script>
 </body>
 </html>
