@@ -1,96 +1,88 @@
 /**
- * HADES HOUSE — PLATAFORMA DE APUESTAS & CASINO VIRTUAL
- * Lógica en Vanilla JS Modular con Persistencia en LocalStorage
+ * HADES HOUSE RD 🇩🇴 — LA BANCA DOMINICANA DE APUESTAS & CASINO VIRTUAL
+ * Lógica en Vanilla JS Modular con Persistencia en LocalStorage (Moneda: RD$)
  */
 
 // STATE MANAGEMENT
 const STATE = {
-    balance: 10000.00,
+    balance: 25000.00, // RD$
     betSlip: [],
     betMode: 'single', // 'single' | 'parlay'
     myBets: [],
     activeFilter: 'live', // 'all' | 'live' | 'upcoming' | 'finished'
-    activeCategory: 'all', // 'all' | 'football' | 'basketball' | 'tennis' | 'esports' | 'casino'
-    crashGame: {
-        multiplier: 1.00,
-        running: false,
-        crashed: false,
-        betAmount: 0,
-        userCashedOut: false,
-        intervalId: null
-    },
+    activeCategory: 'all', // 'all' | 'lidom' | 'mlb' | 'basketball' | 'ldf' | 'banca' | 'gallos'
     matches: [
         {
             id: 'm1',
-            league: 'UEFA Champions League',
-            category: 'football',
-            teamHome: 'Real Madrid',
-            teamAway: 'Barcelona',
-            scoreHome: 2,
-            scoreAway: 1,
-            minute: 78,
+            league: 'LIDOM (Pelota Invernal RD 🇩🇴)',
+            category: 'lidom',
+            teamHome: 'Tigres del Licey 💙',
+            teamAway: 'Águilas Cibaeñas 💛',
+            scoreHome: 4,
+            scoreAway: 3,
+            minute: 8, // 8vo Inning
             status: 'live',
-            odds: { home: 1.85, draw: 3.40, away: 4.10, over25: 1.65, under25: 2.10, btts: 1.55 }
+            odds: { home: 1.80, draw: 12.0, away: 2.10 }
         },
         {
             id: 'm2',
-            league: 'Premier League',
-            category: 'football',
-            teamHome: 'Manchester City',
-            teamAway: 'Liverpool',
-            scoreHome: 1,
+            league: 'LIDOM (Pelota Invernal RD 🇩🇴)',
+            category: 'lidom',
+            teamHome: 'Leones del Escogido ❤️',
+            teamAway: 'Gigantes del Cibao 🤎',
+            scoreHome: 2,
             scoreAway: 1,
-            minute: 54,
+            minute: 6, // 6to Inning
             status: 'live',
-            odds: { home: 2.10, draw: 3.25, away: 3.50, over25: 1.80, under25: 1.95, btts: 1.45 }
+            odds: { home: 1.95, draw: 14.0, away: 1.85 }
         },
         {
             id: 'm3',
-            league: 'NBA League',
-            category: 'basketball',
-            teamHome: 'LA Lakers',
-            teamAway: 'Boston Celtics',
-            scoreHome: 102,
-            scoreAway: 98,
-            minute: 42,
+            league: 'Grandes Ligas (MLB)',
+            category: 'mlb',
+            teamHome: 'NY Yankees (Soto 🇩🇴)',
+            teamAway: 'Boston Red Sox (Devers 🇩🇴)',
+            scoreHome: 5,
+            scoreAway: 4,
+            minute: 7,
             status: 'live',
-            odds: { home: 1.90, draw: 15.0, away: 1.90, over25: 1.75, under25: 2.05, btts: 1.90 }
+            odds: { home: 1.65, draw: 15.0, away: 2.30 }
         },
         {
             id: 'm4',
-            league: 'LaLiga EA Sports',
-            category: 'football',
-            teamHome: 'Atlético de Madrid',
-            teamAway: 'Sevilla FC',
+            league: 'LNB Baloncesto RD 🇩🇴',
+            category: 'basketball',
+            teamHome: 'Reales de La Vega',
+            teamAway: 'Titanes del Distrito',
+            scoreHome: 88,
+            scoreAway: 84,
+            minute: 38,
+            status: 'live',
+            odds: { home: 1.75, draw: 18.0, away: 2.10 }
+        },
+        {
+            id: 'm5',
+            league: 'LDF Fútbol Dominicano 🇩🇴',
+            category: 'ldf',
+            teamHome: 'Cibao FC 🧡',
+            teamAway: 'Atlético Pantoja 💙',
+            scoreHome: 1,
+            scoreAway: 0,
+            minute: 65,
+            status: 'live',
+            odds: { home: 1.90, draw: 3.20, away: 4.00 }
+        },
+        {
+            id: 'm6',
+            league: 'LIDOM (Próximo Juego)',
+            category: 'lidom',
+            teamHome: 'Estrellas Orientales 💚',
+            teamAway: 'Toros del Este 🧡',
             scoreHome: 0,
             scoreAway: 0,
             minute: 0,
             status: 'upcoming',
-            odds: { home: 1.70, draw: 3.60, away: 5.20, over25: 2.00, under25: 1.75, btts: 1.95 }
-        },
-        {
-            id: 'm5',
-            league: 'eSports CS2 Major',
-            category: 'esports',
-            teamHome: 'Natus Vincere',
-            teamAway: 'FaZe Clan',
-            scoreHome: 1,
-            scoreAway: 0,
-            minute: 25,
-            status: 'live',
-            odds: { home: 1.50, draw: 9.00, away: 2.60, over25: 1.70, under25: 2.10, btts: 1.85 }
-        },
-        {
-            id: 'm6',
-            league: 'ATP Grand Slam',
-            category: 'tennis',
-            teamHome: 'Carlos Alcaraz',
-            teamAway: 'Jannik Sinner',
-            scoreHome: 2,
-            scoreAway: 2,
-            minute: 88,
-            status: 'live',
-            odds: { home: 1.95, draw: 20.0, away: 1.85, over25: 1.60, under25: 2.20, btts: 1.95 }
+            odds: { home: 1.85, draw: 11.0, away: 1.95 }
         }
     ]
 };
@@ -108,16 +100,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // LOCAL STORAGE PERSISTENCE
 function loadLocalStorage() {
-    const savedBalance = localStorage.getItem('hades_balance');
+    const savedBalance = localStorage.getItem('hades_rd_balance');
     if (savedBalance !== null) STATE.balance = parseFloat(savedBalance);
 
-    const savedBets = localStorage.getItem('hades_mybets');
+    const savedBets = localStorage.getItem('hades_rd_mybets');
     if (savedBets) STATE.myBets = JSON.parse(savedBets);
 }
 
 function saveLocalStorage() {
-    localStorage.setItem('hades_balance', STATE.balance.toFixed(2));
-    localStorage.setItem('hades_mybets', JSON.stringify(STATE.myBets));
+    localStorage.setItem('hades_rd_balance', STATE.balance.toFixed(2));
+    localStorage.setItem('hades_rd_mybets', JSON.stringify(STATE.myBets));
 }
 
 // EVENT LISTENERS
@@ -130,7 +122,7 @@ function initEventListeners() {
             target.classList.add('active');
             STATE.activeCategory = target.dataset.category;
 
-            if (STATE.activeCategory === 'casino') {
+            if (STATE.activeCategory === 'banca' || STATE.activeCategory === 'gallos') {
                 document.getElementById('matches-grid').classList.add('hidden');
                 document.getElementById('casino-section').classList.remove('hidden');
             } else {
@@ -161,7 +153,7 @@ function initEventListeners() {
         });
     });
 
-    // Pestañas del Boleto / Mis Apuestas
+    // Pestañas del Ticket / Mis Jugadas
     document.getElementById('tab-slip-betslip').addEventListener('click', () => {
         document.getElementById('tab-slip-betslip').classList.add('active');
         document.getElementById('tab-slip-mybets').classList.remove('active');
@@ -181,7 +173,7 @@ function initEventListeners() {
     document.getElementById('btn-mode-single').addEventListener('click', () => setBetMode('single'));
     document.getElementById('btn-mode-parlay').addEventListener('click', () => setBetMode('parlay'));
 
-    // Botones rápidos de monto
+    // Botones rápidos de monto RD$
     document.querySelectorAll('.btn-qs').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const input = document.getElementById('slip-stake-input');
@@ -196,10 +188,10 @@ function initEventListeners() {
 
     document.getElementById('slip-stake-input').addEventListener('input', updateSlipCalculator);
 
-    // Botón Colocar Apuesta
+    // Botón Sellar Ticket en la Banca
     document.getElementById('btn-place-bet').addEventListener('click', placeBet);
 
-    // Recarga / Faucet Modal
+    // Recarga / Fiao Modal
     document.getElementById('btn-open-deposit').addEventListener('click', () => {
         document.getElementById('modal-deposit').classList.remove('hidden');
     });
@@ -208,11 +200,11 @@ function initEventListeners() {
     });
     document.getElementById('btn-claim-faucet').addEventListener('click', claimFaucet);
 
-    // Controles de Operador
+    // Controles de Banquero
     document.getElementById('btn-simulate-minute').addEventListener('click', () => {
         STATE.matches.forEach(m => {
             if (m.status === 'live') {
-                m.minute += 10;
+                m.minute += 1;
                 if (Math.random() > 0.5) m.scoreHome += 1;
             }
         });
@@ -222,18 +214,11 @@ function initEventListeners() {
 
     document.getElementById('btn-finish-matches').addEventListener('click', finishAllMatchesAndSettle);
 
-    // Casino: Crash Game
-    document.getElementById('btn-crash-bet').addEventListener('click', startCrashGame);
-    document.getElementById('btn-crash-cashout').addEventListener('click', cashoutCrashGame);
+    // Banca: El Palé RD
+    document.getElementById('btn-play-pale').addEventListener('click', playPale);
 
-    // Casino: Ruleta
-    document.getElementById('btn-spin-roulette').addEventListener('click', spinRoulette);
-    document.querySelectorAll('.btn-roulette').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.btn-roulette').forEach(b => b.classList.remove('selected'));
-            e.currentTarget.classList.add('selected');
-        });
-    });
+    // Gallos Virtuales
+    document.getElementById('btn-spin-gallo').addEventListener('click', playGallos);
 }
 
 // RENDER MATCHES
@@ -250,7 +235,7 @@ function renderMatches() {
     document.getElementById('count-live').textContent = STATE.matches.filter(m => m.status === 'live').length;
 
     if (filtered.length === 0) {
-        grid.innerHTML = `<div class="empty-slip-state"><i class="fa-solid fa-calendar-xmark empty-icon"></i><p>No hay eventos disponibles en esta categoría</p></div>`;
+        grid.innerHTML = `<div class="empty-slip-state"><i class="fa-solid fa-baseball-bat-ball empty-icon"></i><p>No hay jugadas disponibles en esta liga ahora mismo manín.</p></div>`;
         return;
     }
 
@@ -260,34 +245,38 @@ function renderMatches() {
         card.className = 'match-card';
         card.id = `card-${m.id}`;
 
+        const timeText = isLive 
+            ? (m.category === 'lidom' || m.category === 'mlb' ? `${m.minute}º Inning ⚾` : `Min ${m.minute}' 🟢`)
+            : (m.status === 'finished' ? 'FINALIZADO 🏁' : 'HOY 7:35 PM');
+
         card.innerHTML = `
             <div class="match-card-header">
                 <span class="match-league"><i class="fa-solid fa-trophy"></i> ${m.league}</span>
-                <span class="match-time-badge">${isLive ? `Min ${m.minute}' 🟢` : (m.status === 'finished' ? 'FINALIZADO' : 'HOY 21:00')}</span>
+                <span class="match-time-badge">${timeText}</span>
             </div>
             <div class="match-body">
                 <div class="teams-container">
                     <div class="team-row">
-                        <span class="team-name"><i class="fa-solid fa-shield"></i> ${m.teamHome}</span>
+                        <span class="team-name">${m.teamHome}</span>
                         <span class="team-score">${isLive || m.status === 'finished' ? m.scoreHome : '-'}</span>
                     </div>
                     <div class="team-row">
-                        <span class="team-name"><i class="fa-solid fa-shield-halved"></i> ${m.teamAway}</span>
+                        <span class="team-name">${m.teamAway}</span>
                         <span class="team-score">${isLive || m.status === 'finished' ? m.scoreAway : '-'}</span>
                     </div>
                 </div>
 
                 <div class="odds-group">
                     <button class="odds-btn ${isSelectionInSlip(m.id, '1') ? 'selected' : ''}" onclick="toggleOdds('${m.id}', '1', '${m.teamHome}', ${m.odds.home})">
-                        <span class="odds-label">1 (Local)</span>
+                        <span class="odds-label">Gana Local</span>
                         <span class="odds-value" id="odd-${m.id}-home">${m.odds.home.toFixed(2)}</span>
                     </button>
                     <button class="odds-btn ${isSelectionInSlip(m.id, 'X') ? 'selected' : ''}" onclick="toggleOdds('${m.id}', 'X', 'Empate', ${m.odds.draw})">
-                        <span class="odds-label">X (Empate)</span>
+                        <span class="odds-label">Empate</span>
                         <span class="odds-value" id="odd-${m.id}-draw">${m.odds.draw.toFixed(2)}</span>
                     </button>
                     <button class="odds-btn ${isSelectionInSlip(m.id, '2') ? 'selected' : ''}" onclick="toggleOdds('${m.id}', '2', '${m.teamAway}', ${m.odds.away})">
-                        <span class="odds-label">2 (Visita)</span>
+                        <span class="odds-label">Gana Visita</span>
                         <span class="odds-value" id="odd-${m.id}-away">${m.odds.away.toFixed(2)}</span>
                     </button>
                 </div>
@@ -307,7 +296,6 @@ window.toggleOdds = function(matchId, pickCode, pickName, oddValue) {
     if (existingIndex !== -1) {
         STATE.betSlip.splice(existingIndex, 1);
     } else {
-        // Si es apuesta simple o parlay, reemplazar selecciones del mismo partido si existían
         const sameMatchIndex = STATE.betSlip.findIndex(item => item.matchId === matchId);
         if (sameMatchIndex !== -1) {
             STATE.betSlip.splice(sameMatchIndex, 1);
@@ -347,8 +335,8 @@ function renderSlip() {
         container.innerHTML = `
             <div class="empty-slip-state">
                 <i class="fa-solid fa-ticket-simple empty-icon"></i>
-                <p>Tu boleto está vacío</p>
-                <small>Haz clic en cualquier cuota para agregar una apuesta.</small>
+                <p>Tu ticket está limpio manín</p>
+                <small>Tócale a cualquier cuota para armar tu jugada.</small>
             </div>`;
         updateSlipCalculator();
         return;
@@ -364,7 +352,7 @@ function renderSlip() {
                 <button class="btn-remove-item" onclick="removeSlipItem(${index})"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="slip-item-selection">
-                <span>Elección: <strong>${item.pickName}</strong></span>
+                <span>Jugada: <strong>${item.pickName}</strong></span>
                 <span class="odds-value">${item.odd.toFixed(2)}</span>
             </div>
         `;
@@ -390,7 +378,7 @@ function updateSlipCalculator() {
 
     if (STATE.betSlip.length === 0) {
         totalOddsEl.textContent = '1.00';
-        totalPayoutEl.textContent = '$0.00';
+        totalPayoutEl.textContent = 'RD$ 0.00';
         btnPlace.disabled = true;
         return;
     }
@@ -405,18 +393,18 @@ function updateSlipCalculator() {
     const potentialPayout = stake * totalOdds;
 
     totalOddsEl.textContent = totalOdds.toFixed(2);
-    totalPayoutEl.textContent = `$${potentialPayout.toFixed(2)}`;
+    totalPayoutEl.textContent = `RD$ ${potentialPayout.toLocaleString('es-DO', { minimumFractionDigits: 2 })}`;
 
     btnPlace.disabled = (stake <= 0 || stake > STATE.balance);
 }
 
-// PLACE BET
+// PLACE BET IN BANCA
 function placeBet() {
     const stakeInput = document.getElementById('slip-stake-input');
     const stake = parseFloat(stakeInput.value) || 0;
 
     if (stake <= 0 || stake > STATE.balance) {
-        alert('❌ Saldo insuficiente o monto inválido.');
+        alert('❌ No tienes ese dinero en la banca. Pide un fiao.');
         return;
     }
 
@@ -428,14 +416,14 @@ function placeBet() {
     }
 
     const newBet = {
-        id: 'BET-' + Math.floor(Math.random() * 900000 + 100000),
-        timestamp: new Date().toLocaleString(),
+        id: 'TICKET-' + Math.floor(Math.random() * 900000 + 100000),
+        timestamp: new Date().toLocaleString('es-DO'),
         type: STATE.betMode,
         items: [...STATE.betSlip],
         stake,
         odds: totalOdds,
         potentialPayout: stake * totalOdds,
-        status: 'ACCEPTED' // ACCEPTED | WON | LOST | CASHED_OUT
+        status: 'ACCEPTED'
     };
 
     STATE.balance -= stake;
@@ -447,18 +435,17 @@ function placeBet() {
     renderMatches();
     renderSlip();
 
-    // Notificación
-    alert(`🎉 ¡Apuesta colocada con éxito! Ticket #${newBet.id}`);
+    alert(`🇩🇴 ¡Ticket Sellado en la Banca! N° ${newBet.id}`);
 }
 
-// RENDER MY BETS & CASHOUT
+// RENDER MY BETS & CASH OUT
 function renderMyBets() {
     const container = document.getElementById('mybets-list');
     document.getElementById('mybets-count').textContent = STATE.myBets.filter(b => b.status === 'ACCEPTED').length;
     document.getElementById('active-bets-count').textContent = STATE.myBets.filter(b => b.status === 'ACCEPTED').length;
 
     if (STATE.myBets.length === 0) {
-        container.innerHTML = `<div class="empty-slip-state"><p>No tienes apuestas realizadas aún.</p></div>`;
+        container.innerHTML = `<div class="empty-slip-state"><p>No tienes tickets sellados aún.</p></div>`;
         return;
     }
 
@@ -478,12 +465,12 @@ function renderMyBets() {
                 ${bet.items.map(i => `<div>• <strong>${i.matchTitle}</strong> (${i.pickName} @${i.odd.toFixed(2)})</div>`).join('')}
             </div>
             <div class="summary-row" style="font-size:0.8rem;">
-                <span>Apostado: <strong>$${bet.stake.toFixed(2)}</strong></span>
-                <span>Pago Potencial: <strong style="color:var(--accent-emerald)">$${bet.potentialPayout.toFixed(2)}</strong></span>
+                <span>Apostado: <strong>RD$${bet.stake.toFixed(2)}</strong></span>
+                <span>Premio: <strong style="color:var(--accent-emerald)">RD$${bet.potentialPayout.toFixed(2)}</strong></span>
             </div>
             ${bet.status === 'ACCEPTED' ? `
                 <button class="btn-cashout" onclick="cashoutBet('${bet.id}', ${cashoutValue})">
-                    ⚡ CASH OUT AHORA ($${cashoutValue})
+                    ⚡ CASH OUT AHORA (Cobrar RD$${cashoutValue})
                 </button>
             ` : ''}
         `;
@@ -496,50 +483,46 @@ window.cashoutBet = function(betId, cashoutAmount) {
     if (!bet || bet.status !== 'ACCEPTED') return;
 
     bet.status = 'CASHED_OUT';
-    STATE.balance += cashoutAmount;
+    STATE.balance += parseFloat(cashoutAmount);
 
     saveLocalStorage();
     updateUI();
     renderMyBets();
 
-    alert(`💵 Cash Out exitoso. Retiraste $${cashoutAmount.toFixed(2)} antes de finalizar.`);
+    alert(`💵 Le vendiste el ticket a la Banca por RD$${cashoutAmount}. ¡Cobrado!`);
 };
 
-// FAUCET RECHARGE
+// FAUCET FIAO
 function claimFaucet() {
-    STATE.balance += 1000.00;
+    STATE.balance += 5000.00;
     saveLocalStorage();
     updateUI();
     document.getElementById('modal-deposit').classList.add('hidden');
-    alert('💰 ¡Has recibido +$1,000.00 HDC virtuales gratis!');
+    alert('💰 ¡El Banquero te acreditó RD$5,000.00 de Fiao gratis!');
 }
 
 // UPDATE GENERAL UI
 function updateUI() {
-    document.getElementById('user-balance').innerHTML = `$${STATE.balance.toFixed(2)} <small class="currency">HDC</small>`;
+    document.getElementById('user-balance').innerHTML = `RD$ ${STATE.balance.toLocaleString('es-DO', { minimumFractionDigits: 2 })}`;
     document.getElementById('active-bets-count').textContent = STATE.myBets.filter(b => b.status === 'ACCEPTED').length;
 }
 
-// LIVE ODDS & CLOCK SIMULATION
+// LIVE ODDS SIMULATION
 function simulateLiveOddsAndClock() {
     STATE.matches.forEach(m => {
         if (m.status === 'live') {
-            m.minute += 1;
-            if (m.minute > 90) m.status = 'finished';
-
-            // Variación leve de cuotas
             const delta = (Math.random() - 0.5) * 0.1;
             m.odds.home = Math.max(1.10, m.odds.home + delta);
             m.odds.away = Math.max(1.10, m.odds.away - delta);
         }
     });
 
-    if (STATE.activeCategory !== 'casino') {
+    if (STATE.activeCategory !== 'banca' && STATE.activeCategory !== 'gallos') {
         renderMatches();
     }
 }
 
-// FINISH MATCHES AND SETTLE BETS
+// FINISH MATCHES AND SETTLE
 function finishAllMatchesAndSettle() {
     STATE.matches.forEach(m => {
         m.status = 'finished';
@@ -547,7 +530,6 @@ function finishAllMatchesAndSettle() {
 
     STATE.myBets.forEach(bet => {
         if (bet.status === 'ACCEPTED') {
-            // Simular ganada o perdida 60/40
             const won = Math.random() > 0.4;
             if (won) {
                 bet.status = 'WON';
@@ -563,84 +545,21 @@ function finishAllMatchesAndSettle() {
     renderMatches();
     renderMyBets();
 
-    alert('🏁 Todos los partidos han finalizado. Las apuestas fueron liquidadas.');
+    alert('🏁 ¡Cantaron el 9no Inning! Todos los partidos concluyeron y se pagaron los tickets.');
 }
 
-// CASINO: CRASH GAME
-function startCrashGame() {
-    const stakeInput = document.getElementById('crash-stake');
-    const stake = parseFloat(stakeInput.value) || 0;
+// BANCA: PLAY PALÉ
+function playPale() {
+    const num1 = parseInt(document.getElementById('num-1').value);
+    const num2 = parseInt(document.getElementById('num-2').value);
+    const stake = parseFloat(document.getElementById('pale-stake').value) || 0;
 
-    if (stake <= 0 || stake > STATE.balance) {
-        alert('❌ Saldo insuficiente para el Crash.');
+    if (isNaN(num1) || isNaN(num2) || stake <= 0) {
+        alert('Escribe tus 2 números del 00 al 99.');
         return;
     }
 
-    STATE.balance -= stake;
-    updateUI();
-
-    STATE.crashGame.running = true;
-    STATE.crashGame.crashed = false;
-    STATE.crashGame.multiplier = 1.00;
-    STATE.crashGame.betAmount = stake;
-    STATE.crashGame.userCashedOut = false;
-
-    document.getElementById('btn-crash-bet').classList.add('hidden');
-    document.getElementById('btn-crash-cashout').classList.remove('hidden');
-
-    const crashLimit = (1 + Math.random() * 8).toFixed(2); // Punto de crash entre 1.0x y 9.0x
-
-    STATE.crashGame.intervalId = setInterval(() => {
-        STATE.crashGame.multiplier += 0.05;
-        const current = STATE.crashGame.multiplier.toFixed(2);
-        document.getElementById('crash-multiplier').textContent = `${current}x`;
-        document.getElementById('crash-fill').style.width = `${Math.min(100, current * 10)}%`;
-
-        if (parseFloat(current) >= parseFloat(crashLimit)) {
-            // CRASHED!
-            clearInterval(STATE.crashGame.intervalId);
-            STATE.crashGame.crashed = true;
-            STATE.crashGame.running = false;
-            document.getElementById('crash-status').textContent = `💥 ¡CRASH en ${current}x!`;
-            document.getElementById('crash-status').style.color = 'var(--danger-red)';
-
-            document.getElementById('btn-crash-bet').classList.remove('hidden');
-            document.getElementById('btn-crash-cashout').classList.add('hidden');
-        }
-    }, 100);
-}
-
-function cashoutCrashGame() {
-    if (!STATE.crashGame.running || STATE.crashGame.userCashedOut) return;
-
-    STATE.crashGame.userCashedOut = true;
-    clearInterval(STATE.crashGame.intervalId);
-
-    const winAmount = STATE.crashGame.betAmount * STATE.crashGame.multiplier;
-    STATE.balance += winAmount;
-
-    saveLocalStorage();
-    updateUI();
-
-    document.getElementById('crash-status').textContent = `🎉 Retirado a ${STATE.crashGame.multiplier.toFixed(2)}x (+$${winAmount.toFixed(2)})`;
-    document.getElementById('crash-status').style.color = 'var(--accent-emerald)';
-
-    document.getElementById('btn-crash-bet').classList.remove('hidden');
-    document.getElementById('btn-crash-cashout').classList.add('hidden');
-}
-
-// CASINO: RULETA
-function spinRoulette() {
-    const selectedBtn = document.querySelector('.btn-roulette.selected');
-    if (!selectedBtn) {
-        alert('Por favor selecciona una opción (Rojo, Negro o Verde)');
-        return;
-    }
-
-    const choice = selectedBtn.dataset.choice;
-    const stake = parseFloat(document.getElementById('roulette-stake').value) || 0;
-
-    if (stake <= 0 || stake > STATE.balance) {
+    if (stake > STATE.balance) {
         alert('❌ Saldo insuficiente.');
         return;
     }
@@ -648,27 +567,52 @@ function spinRoulette() {
     STATE.balance -= stake;
     updateUI();
 
-    const rouletteDisplay = document.getElementById('roulette-result-display');
-    rouletteDisplay.textContent = '🎰';
+    const n1 = Math.floor(Math.random() * 100);
+    const n2 = Math.floor(Math.random() * 100);
+
+    const isHit = (num1 === n1 && num2 === n2) || (num1 === n2 && num2 === n1);
+
+    if (isHit) {
+        const win = stake * 100;
+        STATE.balance += win;
+        alert(`🎉 ¡¡¡PEGASTE EL PALÉ!!! Salieron ${n1} - ${n2}. Ganaste RD$${win.toFixed(2)}`);
+    } else {
+        alert(`🎰 Salieron el ${n1} y el ${n2}. Sigue intentando en el próximo sorteo.`);
+    }
+
+    saveLocalStorage();
+    updateUI();
+}
+
+// GALLERA VIRTUAL
+function playGallos() {
+    const selected = document.querySelector('.btn-roulette.selected');
+    if (!selected) {
+        alert('Selecciona tu gallo (Indio o Giro).');
+        return;
+    }
+
+    const choice = selected.dataset.choice;
+    const stake = parseFloat(document.getElementById('gallo-stake').value) || 0;
+
+    if (stake <= 0 || stake > STATE.balance) {
+        alert('❌ Saldo insuficiente para la Gallera.');
+        return;
+    }
+
+    STATE.balance -= stake;
+    updateUI();
+
+    alert('🐓 ¡Soltaron los gallos en el redondel! La pelea está picante...');
 
     setTimeout(() => {
-        const num = Math.floor(Math.random() * 37); // 0 al 36
-        rouletteDisplay.textContent = num;
-
-        let isRed = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(num);
-        let win = false;
-        let payoutMultiplier = 2;
-
-        if (choice === 'red' && isRed) win = true;
-        if (choice === 'black' && !isRed && num !== 0) win = true;
-        if (choice === 'zero' && num === 0) { win = true; payoutMultiplier = 35; }
-
-        if (win) {
-            const winAmount = stake * payoutMultiplier;
-            STATE.balance += winAmount;
-            alert(`🎉 ¡Ganaste $${winAmount.toFixed(2)} HDC en la Ruleta! Número: ${num}`);
+        const winner = Math.random() > 0.5 ? 'indio' : 'giro';
+        if (choice === winner) {
+            const win = stake * (winner === 'indio' ? 1.95 : 1.85);
+            STATE.balance += win;
+            alert(`🏆 ¡Ganó el Gallo ${winner.toUpperCase()}! Cobraste RD$${win.toFixed(2)}`);
         } else {
-            alert(`❌ Cayó en ${num}. No acertaste esta vez.`);
+            alert(`❌ Tu gallo no pudo en esta pelea. Ganó el Gallo ${winner.toUpperCase()}.`);
         }
 
         saveLocalStorage();
